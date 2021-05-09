@@ -53,7 +53,7 @@ export default defineComponent({
         0
       );
 
-      return Math.max(1, largestBodyRadius / 200);
+      return Math.max(1, largestBodyRadius / 100);
     });
 
     const scale = computed(
