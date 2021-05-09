@@ -16,8 +16,8 @@
       id="bodies"
       class="field"
       list="body-list"
-      @input="add($event.target.value)"
-      @blur="$event.target.value = ''"
+      @input="onInput($event.target)"
+      @blur="onBlur($event.target)"
     />
     <datalist id="body-list">
       <option v-for="body in bodies" :key="body.key" :value="body.key">
@@ -68,6 +68,10 @@ export default defineComponent({
       selected.value = keys.map((k) => bodies[k]);
     };
 
+    const onInput = (target: EventTarget | null) =>
+      add((target as HTMLInputElement).value);
+    const onBlur = (target: EventTarget | null) =>
+      ((target as HTMLInputElement).value = "");
     return {
       selected,
       bodies,
@@ -75,6 +79,8 @@ export default defineComponent({
       remove,
       add,
       set,
+      onInput,
+      onBlur,
     };
   },
 });
