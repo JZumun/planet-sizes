@@ -1,0 +1,165 @@
+groups:
+  solar-system:
+    name: The Solar System
+    includes:
+      - sun
+      - mercury
+      - venus
+      - earth
+      - mars
+      - ceres
+      - jupiter
+      - saturn
+      - uranus
+      - neptune
+      - pluto
+      - haumea
+      - makemake
+      - eris
+  major-planets:
+    name: Major Planets
+    includes:
+      - mercury
+      - venus
+      - earth
+      - mars
+      - jupiter
+      - saturn
+      - uranus
+      - neptune
+  dwarf-planets:
+    name: Dwarf Planets
+    includes:
+      - ceres
+      - pluto
+      - haumea
+      - makemake
+      - eris
+  earth-system:
+    name: Earth and Moon
+    includes:
+      - earth
+      - moon
+  mars-system:
+    name: Mars
+    includes:
+      - mars
+      - phobos
+      - deimos
+bodies:
+  sun:
+    name: The Sun
+    color: "#ffbf00"
+    radius:
+      - 695_700
+      - 695_700
+    tilt: 7.25
+
+  mercury:
+    name: Mercury
+    color: "#ad7c59"
+    radius:
+      - 2439.7
+      - 2439.7
+    tilt: 0.03
+  venus:
+    name: Venus
+    color: "#be6794"
+    radius:
+      - 6051.8
+      - 6051.8
+    tilt: 177.36
+  earth:
+    name: Earth
+    color: "#397abe"
+    radius:
+      - 6378.137
+      - 6356.72
+    tilt: 23.439
+  mars:
+    name: Mars
+    radius:
+      - 3396.2
+      - 3376.2
+    tilt: 25.19
+    color: "#bc4848"
+  ceres:
+    name: Ceres
+    radius:
+      - 964.4
+      - 891.8
+    tilt: 4
+  jupiter:
+    name: Jupiter
+    color: "#c6a678"
+    radius:
+      - 71_492
+      - 66_854
+    tilt: 3.13
+  saturn:
+    name: Saturn
+    color: "#be8d59"
+    radius:
+      - 60_268
+      - 54_364
+    tilt: 26.73
+  uranus:
+    name: Uranus
+    color: "#7cc2c2"
+    radius:
+      - 25_559
+      - 24_973
+    tilt: 82.23
+  neptune:
+    name: Neptune
+    color: "#003d8b"
+    radius:
+      - 24_764
+      - 24_341
+    tilt: 28.32
+
+  pluto:
+    name: Pluto
+    color: "#3c3636"
+    radius:
+      - 1188.3
+      - 1188.3
+    tilt: 120
+
+  haumea:
+    name: Haumea
+    radius:
+      - 1050
+      - 537
+    tilt: 28
+
+  makemake:
+    name: Makemake
+    radius:
+      - 751
+      - 715
+  eris:
+    name: Eris
+    color: "#333"
+    radius:
+      - 1163
+    tilt: 78
+
+  moon:
+    name: The Moon
+    color: "#ddd"
+    radius:
+      - 1738.1
+      - 1736.0
+    tilt: 1.5
+
+  phobos:
+    name: Phobos
+    radius:
+      - 13.5
+      - 9
+  deimos:
+    name: Deimos
+    radius:
+      - 7.5
+      - 5.5
