@@ -1,17 +1,19 @@
 <template>
   <div class="celestial-body">
     <div class="figure"></div>
-    <p class="label">
-      {{ body.name }}
-    </p>
-    <p class="size">{{ friendlyDiameter }}</p>
+    <div class="labels">
+      <p v-if="showName" class="name">
+        {{ body.name }}
+      </p>
+      <p v-if="showDiameter" class="size">{{ friendlyDiameter }}</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import type { CelestialBodyData } from "../data/data";
-import { defineComponent, PropType, computed, ComputedRef } from "vue";
-import { create as rand, RandomSeed } from "random-seed";
+import { defineComponent, PropType, computed } from "vue";
+import { create as rand } from "random-seed";
 
 function generateRandomGray(seed: string) {
   const r = rand(seed);
@@ -35,6 +37,14 @@ export default defineComponent({
     scale: {
       required: true,
       type: Number,
+    },
+    showName: {
+      type: Boolean,
+      default: true,
+    },
+    showDiameter: {
+      type: Boolean,
+      default: true,
     },
   },
   setup(props) {
@@ -102,14 +112,15 @@ export default defineComponent({
 
 p {
   margin: 0;
+  white-space: nowrap;
 }
 
-.label {
+.labels {
   margin-top: 1em;
+  text-align: center;
 }
 .size {
   font-size: 0.8em;
   opacity: 0.5;
-  margin-top: 0;
 }
 </style>

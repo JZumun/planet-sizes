@@ -4,40 +4,13 @@
     <p>
       A tool for comparing the sizes of celestial bodies in the solar system.
     </p>
+    <fieldset>
+      <legend>Celestial Bodies</legend>
+      <celestial-body-picker v-model="displayedBodies" />
+    </fieldset>
 
-    <section class="options" @submit.prevent>
-      <label for="presets">Presets</label>
-      <div class="field button-field" id="presets">
-        <button
-          v-for="group in groups"
-          :key="group.key"
-          @click.prevent="set(...group.includes)"
-        >
-          {{ group.name }}
-        </button>
-      </div>
-      <label for="bodies">Add: </label>
-      <input
-        class="field"
-        type="search"
-        id="bodies"
-        list="body-list"
-        v-model.lazy="additionalBody"
-      />
-      <datalist id="body-list">
-        <option v-for="body in bodies" :key="body.key" :value="body.key">
-          {{ body.name }}
-        </option>
-      </datalist>
-
-      <div class="field">
-        <div class="body-tag" v-for="body in displayedBodies" :key="body.key">
-          {{ body.name }}
-          <button class="remove" @click.prevent="remove(body.key)">✕</button>
-        </div>
-      </div>
-      <button class="field" @click.prevent="set()">Clear</button>
-
+    <fieldset class="view-controls">
+      <legend>View Controls</legend>
       <label for="zoom">Zoom</label>
       <log-slider
         class="field"
@@ -46,60 +19,56 @@
         :min="1 / 10"
         :max="10"
       />
-    </section>
+      <label for="show-names">Show Names</label>
+      <input
+        type="checkbox"
+        name="show-names"
+        id="show-names"
+        v-model="showNames"
+      />
+      <label for="show-diameters">Show Diameters</label>
+      <input
+        type="checkbox"
+        name="show-diameters"
+        id="show-diameters"
+        v-model="showDiameters"
+      />
+    </fieldset>
   </section>
-  <celestial-bodies id="gallery" :bodies="displayedBodies" :zoom="zoom" />
+  <celestial-bodies
+    id="gallery"
+    :bodies="displayedBodies"
+    :zoom="zoom"
+    :showNames="showNames"
+    :showDiameters="showDiameters"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from "vue";
+import { defineComponent, ref } from "vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
 import LogSlider from "./components/form/LogSlider.vue";
-import { bodies, CelestialBodyData, groups } from "./data/data";
+import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
+import { CelestialBodyData } from "./data/data";
 
 export default defineComponent({
   name: "App",
   components: {
     CelestialBodies,
+    CelestialBodyPicker,
     LogSlider,
   },
   setup() {
     const displayedBodies = ref<CelestialBodyData[]>([]);
-    const remove = (key: string) => {
-      displayedBodies.value = displayedBodies.value.filter(
-        (body) => body.key !== key
-      );
-    };
-    const add = (key: string) => {
-      if (key in bodies) {
-        remove(key);
-        displayedBodies.value.push(bodies[key]);
-      }
-    };
-    const set = (...keys: string[]) => {
-      console.log("why");
-      displayedBodies.value = keys.map((k) => bodies[k]);
-    };
-    set(...groups["solar-system"].includes);
-
-    const additionalBody = ref<string>("");
-    watch(additionalBody, () => {
-      if (additionalBody.value in bodies) {
-        console.log(`hello ${additionalBody.value}`);
-        add(additionalBody.value);
-      }
-      additionalBody.value = "";
-    });
 
     const zoom = ref(1);
+    const showNames = ref(true);
+    const showDiameters = ref(true);
     return {
-      bodies: Object.values(bodies),
-      groups: Object.values(groups),
-      additionalBody,
       displayedBodies,
       zoom,
-      remove,
-      set,
+      showNames,
+      showDiameters,
     };
   },
 });
@@ -123,11 +92,46 @@ body {
   padding: 0;
 }
 
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #444 transparent;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 10px;
+  border: 3px solid #111;
+}
+
+fieldset {
+  border-color: #333;
+  margin-top: 1em;
+  padding: 1em;
+}
+
+input {
+  border: 0;
+  color: inherit;
+  border-bottom: 2px solid;
+  background: transparent;
+  padding: 0.5em;
+}
+
 button {
   padding: 0.5em 1em;
   border: none;
   background: #222;
-  color: white;
+  color: inherit;
   cursor: pointer;
 }
 
@@ -150,45 +154,21 @@ button {
   padding: 1em;
   grid-area: controls;
   background: #151516;
+  overflow: auto;
 }
 
-.options {
+.view-controls {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1em;
+  align-items: center;
 }
 
-.options > label {
+.view-controls > label {
   grid-column: 1;
 }
 
-.options > .field {
+.view-controls > .field {
   grid-column: 2;
-}
-
-.body-tag {
-  display: inline-block;
-  margin-right: 0.5em;
-  margin-bottom: 0.5em;
-  padding: 0.5em;
-  background: #222;
-}
-.body-tag > .remove {
-  background: none;
-  padding: 0;
-}
-
-.button-field {
-  display: flex;
-  gap: 0.25em;
-  flex-wrap: wrap;
-}
-
-input {
-  border: 0;
-  color: inherit;
-  border-bottom: 2px solid;
-  background: transparent;
-  padding: 0.5em;
 }
 </style>

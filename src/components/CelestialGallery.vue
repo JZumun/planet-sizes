@@ -7,6 +7,8 @@
         v-bind:key="body.key"
         :body="body"
         :scale="scale"
+        :showName="showNames"
+        :showDiameter="showDiameters"
       />
     </section>
     <section class="empty-message" v-else>
@@ -34,6 +36,14 @@ export default defineComponent({
     zoom: {
       type: Number,
       default: 1,
+    },
+    showNames: {
+      type: Boolean,
+      default: true,
+    },
+    showDiameters: {
+      type: Boolean,
+      default: true,
     },
   },
   setup(props) {
