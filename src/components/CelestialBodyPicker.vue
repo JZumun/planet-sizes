@@ -53,17 +53,20 @@ export default defineComponent({
     });
 
     const remove = (key: string) => {
-      selected.value = selected.value.filter((b) => b.key !== key);
+      return (selected.value = selected.value.filter((b) => b.key !== key));
     };
     const add = (key: string) => {
       if (key in bodies) {
-        remove(key);
-        selected.value = [...selected.value, bodies[key]];
+        selected.value = [...remove(key), bodies[key]];
       }
     };
     const set = (...keys: string[]) => {
       selected.value = keys.map((k) => bodies[k]);
     };
+
+    if (!selected.value || selected.value.length == 0) {
+      set(...groups["earth-system"].includes);
+    }
 
     const onInput = (target: EventTarget | null) =>
       add((target as HTMLInputElement).value);

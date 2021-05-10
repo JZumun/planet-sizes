@@ -96,16 +96,16 @@ export default defineComponent({
 }
 .figure::before {
   --equator-thickness: 1px;
-  --equator-curvature: 20%;
+  --equator-curvature: 0;
   content: "";
   display: block;
   position: absolute;
   border-bottom: var(--equator-thickness) dashed #111;
-  border-radius: 100%;
+  /* border-radius: 100%; */
   width: v-bind(width);
   height: var(--equator-curvature);
   left: 0;
-  top: calc(50% - var(--equator-curvature) / 2);
+  top: calc(50% - var(--equator-thickness) / 2);
   z-index: -1;
   opacity: 0.4;
 }

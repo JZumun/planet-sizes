@@ -28,12 +28,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
 import LogSlider from "./components/form/LogSlider.vue";
 import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
-import { CelestialBodyData } from "./data/data";
+import { CelestialBodyData, bodies } from "./data/data";
+
+const QKEY = "i";
+const SEPARATOR = " ";
+function updateQueryParameters(bodies: CelestialBodyData[]) {
+  const params = new URLSearchParams();
+  params.set(QKEY, bodies.map((b) => b.key).join(SEPARATOR));
+  history.replaceState(null, (null as any) as string, `?${params.toString()}`);
+}
+
+function retrieveFromQueryParameters() {
+  const params = new URLSearchParams(window.location.search);
+  const values = params.get(QKEY);
+  return values?.split(SEPARATOR) ?? [];
+}
 
 export default defineComponent({
   name: "App",
@@ -44,7 +58,15 @@ export default defineComponent({
     LogSlider,
   },
   setup() {
-    const displayedBodies = ref<CelestialBodyData[]>([]);
+    const displayedBodies = ref<CelestialBodyData[]>(
+      retrieveFromQueryParameters()
+        .map((k) => bodies[k])
+        .filter((b) => b)
+    );
+
+    watch(displayedBodies, () => {
+      updateQueryParameters(displayedBodies.value ?? []);
+    });
 
     const zoom = ref(1);
     const showNames = ref(true);
