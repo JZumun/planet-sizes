@@ -127,7 +127,8 @@ fieldset {
   padding: 1em;
 }
 
-input {
+input,
+select {
   border: 0;
   color: inherit;
   background: transparent;
@@ -135,8 +136,19 @@ input {
   vertical-align: middle;
 }
 
-input[type="search"] {
+input[type="search"],
+select {
   border: 1px solid #222;
+}
+
+option {
+  color: #ddd;
+  background: #444;
+}
+
+select:invalid,
+select option[value=""] {
+  color: #666;
 }
 
 ::placeholder {

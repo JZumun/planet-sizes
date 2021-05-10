@@ -41,11 +41,29 @@ groups:
       - earth
       - moon
   mars-system:
-    name: Mars
+    name: Martian System
     includes:
       - mars
       - phobos
       - deimos
+  jupiter-system:
+    name: Jovian System
+    includes:
+      - jupiter
+      - io
+      - europa
+      - ganymede
+      - callisto
+  saturn-system:
+    name: Saturnian System
+    includes:
+      - saturn
+      - titan
+  pluto-system:
+    name: Pluto and Charon
+    includes:
+      - pluto
+      - charon
 bodies:
   sun:
     name: The Sun
@@ -91,7 +109,7 @@ bodies:
     tilt: 4
   jupiter:
     name: Jupiter
-    color: "#c6a678"
+    color: "#ff9250"
     radius:
       - 71_492
       - 66_854
@@ -101,7 +119,7 @@ bodies:
       color: "#444"
   saturn:
     name: Saturn
-    color: "#be8d59"
+    color: "#ffce5b"
     radius:
       - 60_268
       - 54_364
@@ -175,3 +193,35 @@ bodies:
     radius:
       - 7.5
       - 5.5
+
+  io:
+    name: Io
+    color: "#ffda4a"
+    radius:
+      - 1830
+      - 1815.3
+  europa:
+    name: Europa
+    color: "#c3e0c3"
+    radius:
+      - 1560.8
+  ganymede:
+    name: Ganymede
+    radius:
+      - 2634.1
+  callisto:
+    name: Callisto
+    radius:
+      - 2410.3
+
+  titan:
+    name: Titan
+    color: "#ad7000"
+    radius:
+      - 2574.73
+
+  charon:
+    name: Charon
+    color: "#666"
+    radius:
+      - 606

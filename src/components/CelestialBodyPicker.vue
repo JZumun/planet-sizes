@@ -1,13 +1,11 @@
 <template>
   <section class="options">
-    <label>Presets</label>
-    <div class="field buttons" id="presets">
-      <button
-        v-for="group in groups"
-        :key="group.key"
-        @click.prevent="set(...group.includes)"
-      >{{ group.name }}</button>
-    </div>
+    <label for="presets">Presets</label>
+    <select name="presets" id="presets" v-model="preset" required>
+      <option :value="undefined" selected disabled hidden>Choose a preset...</option>
+      <option v-for="group in groups" :key="group.key" :value="group.key">{{group.name}}</option>
+    </select>
+
     <label for="bodies">Add:</label>
     <input
       type="search"
@@ -33,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType, ref, watch } from "vue";
 import { CelestialBodyData, bodies, groups } from "../data/data";
 
 export default defineComponent({
@@ -45,6 +43,7 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
+    const preset = ref<string | undefined>(undefined);
     const selected = computed({
       get: () => props.modelValue,
       set(val) {
@@ -52,21 +51,34 @@ export default defineComponent({
       },
     });
 
+    const clearPreset = () => (preset.value = undefined);
+
     const remove = (key: string) => {
+      clearPreset();
       return (selected.value = selected.value.filter((b) => b.key !== key));
     };
     const add = (key: string) => {
       if (key in bodies) {
         selected.value = [...remove(key), bodies[key]];
+        clearPreset();
       }
     };
     const set = (...keys: string[]) => {
+      if (keys.length == 0) {
+        clearPreset();
+      }
       selected.value = keys.map((k) => bodies[k]);
     };
 
     if (!selected.value || selected.value.length == 0) {
       set(...groups["earth-system"].includes);
     }
+
+    watch(preset, () => {
+      if (preset.value && preset.value in groups) {
+        set(...groups[preset.value].includes);
+      }
+    });
 
     const onInput = (target: EventTarget | null) =>
       add((target as HTMLInputElement).value);
@@ -79,6 +91,7 @@ export default defineComponent({
       remove,
       add,
       set,
+      preset,
       onInput,
       onBlur,
     };
