@@ -1,39 +1,22 @@
 <template>
   <section id="controls">
     <h1 class="title">The Size of Planets</h1>
-    <p>
-      A tool for comparing the sizes of celestial bodies in the solar system.
-    </p>
+    <p>A tool for comparing the sizes of celestial bodies in the solar system.</p>
     <fieldset>
-      <legend>Celestial Bodies</legend>
+      <legend>Explore</legend>
       <celestial-body-picker v-model="displayedBodies" />
     </fieldset>
 
     <fieldset class="view-controls">
       <legend>View Controls</legend>
       <label for="zoom">Zoom</label>
-      <log-slider
-        class="field"
-        id="zoom"
-        v-model="zoom"
-        :min="1 / 10"
-        :max="10"
-      />
+      <log-slider class="field" id="zoom" v-model="zoom" :min="1 / 10" :max="10" />
       <label for="show-names">Show Names</label>
-      <input
-        type="checkbox"
-        name="show-names"
-        id="show-names"
-        v-model="showNames"
-      />
+      <input type="checkbox" name="show-names" id="show-names" v-model="showNames" />
       <label for="show-diameters">Show Diameters</label>
-      <input
-        type="checkbox"
-        name="show-diameters"
-        id="show-diameters"
-        v-model="showDiameters"
-      />
+      <input type="checkbox" name="show-diameters" id="show-diameters" v-model="showDiameters" />
     </fieldset>
+    <app-footer />
   </section>
   <celestial-bodies
     id="gallery"
@@ -46,6 +29,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
 import LogSlider from "./components/form/LogSlider.vue";
 import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
@@ -54,6 +38,7 @@ import { CelestialBodyData } from "./data/data";
 export default defineComponent({
   name: "App",
   components: {
+    AppFooter,
     CelestialBodies,
     CelestialBodyPicker,
     LogSlider,
@@ -115,6 +100,7 @@ body {
 
 fieldset {
   border-color: #333;
+  margin: 0;
   margin-top: 1em;
   padding: 1em;
 }
@@ -122,15 +108,25 @@ fieldset {
 input {
   border: 0;
   color: inherit;
-  border-bottom: 2px solid;
   background: transparent;
   padding: 0.5em;
+  vertical-align: middle;
+}
+
+input[type="search"] {
+  border: 1px solid #222;
+}
+
+::placeholder {
+  color: #999;
 }
 
 button {
   padding: 0.5em 1em;
   border: none;
   background: #222;
+  font: inherit;
+  font-size: 0.8em;
   color: inherit;
   cursor: pointer;
 }
@@ -155,6 +151,15 @@ button {
   grid-area: controls;
   background: #151516;
   overflow: auto;
+  padding: 1em;
+  padding-top: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+.title {
+  margin: 0;
 }
 
 .view-controls {

@@ -1,6 +1,9 @@
 <template>
   <section class="celestial-bodies-gallery">
-    <div class="scale">{{ Intl.NumberFormat().format(scale * 100) }} km</div>
+    <div class="scale-container">
+      <div class="scale">{{ Intl.NumberFormat().format(scale * 100) }} km</div>
+      <p class="scale-disclaimer">Distances between objects not drawn to scale</p>
+    </div>
     <section class="celestial-bodies" v-if="bodies.length > 0">
       <celestial-body
         v-for="body in bodies"
@@ -11,9 +14,7 @@
         :showDiameter="showDiameters"
       />
     </section>
-    <section class="empty-message" v-else>
-      Choose which celestial bodies to display from the options.
-    </section>
+    <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
   </section>
 </template>
 
@@ -93,7 +94,7 @@ export default defineComponent({
   margin: auto;
 }
 
-.scale {
+.scale-container {
   padding: 2em;
   position: fixed;
   bottom: 20px;
@@ -110,5 +111,10 @@ export default defineComponent({
   border: 1px solid white;
   border-top: 0;
   margin-right: 5px;
+}
+
+.scale-disclaimer {
+  color: #444;
+  font-size: 0.75em;
 }
 </style>

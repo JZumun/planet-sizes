@@ -6,23 +6,20 @@
         v-for="group in groups"
         :key="group.key"
         @click.prevent="set(...group.includes)"
-      >
-        {{ group.name }}
-      </button>
+      >{{ group.name }}</button>
     </div>
     <label for="bodies">Add:</label>
     <input
       type="search"
       id="bodies"
       class="field"
+      placeholder="Look up..."
       list="body-list"
       @input="onInput($event.target)"
       @blur="onBlur($event.target)"
     />
     <datalist id="body-list">
-      <option v-for="body in bodies" :key="body.key" :value="body.key">
-        {{ body.name }}
-      </option>
+      <option v-for="body in bodies" :key="body.key" :value="body.key">{{ body.name }}</option>
     </datalist>
 
     <div class="field">
@@ -91,6 +88,7 @@ export default defineComponent({
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1em;
+  align-items: baseline;
 }
 
 .options > label {

@@ -2,9 +2,7 @@
   <div class="celestial-body">
     <div class="figure"></div>
     <div class="labels">
-      <p v-if="showName" class="name">
-        {{ body.name }}
-      </p>
+      <p v-if="showName" class="name">{{ body.name }}</p>
       <p v-if="showDiameter" class="size">{{ friendlyDiameter }}</p>
     </div>
   </div>
@@ -98,14 +96,16 @@ export default defineComponent({
 }
 .figure::before {
   --equator-thickness: 1px;
+  --equator-curvature: 20%;
   content: "";
   display: block;
   position: absolute;
-  border: var(--equator-thickness) dashed #111;
+  border-bottom: var(--equator-thickness) dashed #111;
+  border-radius: 100%;
   width: v-bind(width);
-  height: 0;
+  height: var(--equator-curvature);
   left: 0;
-  top: calc(50% - var(--equator-thickness));
+  top: calc(50% - var(--equator-curvature) / 2);
   z-index: -1;
   opacity: 0.4;
 }
