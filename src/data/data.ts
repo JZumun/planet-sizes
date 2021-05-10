@@ -6,6 +6,10 @@ export interface CelestialBodyData {
   radius: [number] | [number, number];
   tilt?: number;
   color?: string;
+  rings?: {
+    radius: number;
+    color: string;
+  };
 }
 
 export interface CelestialBodyGroup {

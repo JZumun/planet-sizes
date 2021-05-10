@@ -96,6 +96,9 @@ bodies:
       - 71_492
       - 66_854
     tilt: 3.13
+    rings:
+      radius: 128_000
+      color: "#444"
   saturn:
     name: Saturn
     color: "#be8d59"
@@ -103,6 +106,9 @@ bodies:
       - 60_268
       - 54_364
     tilt: 26.73
+    rings:
+      radius: 140_000
+      color: "#aaa"
   uranus:
     name: Uranus
     color: "#7cc2c2"
@@ -110,6 +116,9 @@ bodies:
       - 25_559
       - 24_973
     tilt: 82.23
+    rings:
+      radius: 51_000
+      color: "#444"
   neptune:
     name: Neptune
     color: "#003d8b"
@@ -117,6 +126,9 @@ bodies:
       - 24_764
       - 24_341
     tilt: 28.32
+    rings:
+      radius: 63_000
+      color: "#444"
 
   pluto:
     name: Pluto

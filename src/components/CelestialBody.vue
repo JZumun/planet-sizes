@@ -1,6 +1,9 @@
 <template>
   <div class="celestial-body">
-    <div class="figure"></div>
+    <div class="figure">
+      <div class="body"></div>
+      <div v-if="body.rings" class="rings"></div>
+    </div>
     <div class="labels">
       <p v-if="showName" class="name">{{ body.name }}</p>
       <p v-if="showDiameter" class="size">{{ friendlyDiameter }}</p>
@@ -65,12 +68,19 @@ export default defineComponent({
         `${Intl.NumberFormat().format(Math.floor(props.body.radius[0] * 2))} km`
     );
 
+    const ringWidth = computed(
+      () => `${((props.body.rings?.radius ?? 0) * 2) / props.scale}px`
+    );
+    const ringColor = computed(() => props.body.rings?.color ?? "transparent");
+
     return {
       width,
       height,
       tilt,
       color,
       friendlyDiameter,
+      ringWidth,
+      ringColor,
     };
   },
 });
@@ -84,17 +94,24 @@ export default defineComponent({
   align-items: center;
   z-index: 1;
 }
+
 .figure {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  grid-template-areas: "figure";
+  transform: rotate(v-bind(tilt));
+}
+.body {
+  grid-area: figure;
   background-color: v-bind(color);
   position: relative;
   height: v-bind(height);
   width: v-bind(width);
-  transform: rotate(v-bind(tilt));
   border-radius: 100%;
-  z-index: 0;
-  overflow: hidden;
 }
-.figure::before {
+.body::before {
   --equator-thickness: 1px;
   --equator-curvature: 0;
   content: "";
@@ -106,8 +123,17 @@ export default defineComponent({
   height: var(--equator-curvature);
   left: 0;
   top: calc(50% - var(--equator-thickness) / 2);
-  z-index: -1;
   opacity: 0.4;
+}
+
+.rings {
+  grid-area: figure;
+  height: 1px;
+  border-radius: 1px;
+  width: v-bind(ringWidth);
+  background: v-bind(ringColor);
+  opacity: 0.5;
+  z-index: -1;
 }
 
 p {
