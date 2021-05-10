@@ -2,7 +2,7 @@
   <footer>
     Created by
     <a class="author" href="https://jzumun.ph">
-      <img src="https://avatars3.githubusercontent.com/u/10479613" alt />
+      <img src="https://avatars3.githubusercontent.com/u/10479613" alt="profile-picture" />
       JZumun
     </a>
     using
