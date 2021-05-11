@@ -12,11 +12,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "vue";
+import { defineComponent, ref, watchEffect } from "vue";
 import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
 import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
 import { CelestialBodyData, bodies } from "./data/data";
+import { list } from "./utilities/text";
 
 const QKEY = "i";
 const SEPARATOR = " ";
@@ -30,6 +31,14 @@ function retrieveFromQueryParameters() {
   const params = new URLSearchParams(window.location.search);
   const values = params.get(QKEY);
   return values?.split(SEPARATOR) ?? [];
+}
+
+const BASE_TITLE = "The Size of Planets";
+function updateTitle(bodies: CelestialBodyData[]) {
+  window.document.title =
+    bodies.length == 0
+      ? BASE_TITLE
+      : `${BASE_TITLE} - ${list(bodies.map((b) => b.name))}`;
 }
 
 export default defineComponent({
@@ -46,8 +55,9 @@ export default defineComponent({
         .filter((b) => b)
     );
 
-    watch(displayedBodies, () => {
+    watchEffect(() => {
       updateQueryParameters(displayedBodies.value ?? []);
+      updateTitle(displayedBodies.value ?? []);
     });
 
     return {
