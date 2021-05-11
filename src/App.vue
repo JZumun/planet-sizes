@@ -6,32 +6,15 @@
       <legend>Explore</legend>
       <celestial-body-picker v-model="displayedBodies" />
     </fieldset>
-
-    <fieldset class="view-controls">
-      <legend>View Controls</legend>
-      <label for="zoom">Zoom</label>
-      <log-slider class="field" id="zoom" v-model="zoom" :min="1 / 10" :max="10" />
-      <label for="show-names">Show Names</label>
-      <input type="checkbox" name="show-names" id="show-names" v-model="showNames" />
-      <label for="show-diameters">Show Diameters</label>
-      <input type="checkbox" name="show-diameters" id="show-diameters" v-model="showDiameters" />
-    </fieldset>
-    <app-footer />
+    <app-footer id="footer" />
   </section>
-  <celestial-bodies
-    id="gallery"
-    :bodies="displayedBodies"
-    :zoom="zoom"
-    :showNames="showNames"
-    :showDiameters="showDiameters"
-  />
+  <celestial-bodies id="gallery" :bodies="displayedBodies" />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch } from "vue";
 import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
-import LogSlider from "./components/form/LogSlider.vue";
 import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
 import { CelestialBodyData, bodies } from "./data/data";
 
@@ -55,7 +38,6 @@ export default defineComponent({
     AppFooter,
     CelestialBodies,
     CelestialBodyPicker,
-    LogSlider,
   },
   setup() {
     const displayedBodies = ref<CelestialBodyData[]>(
@@ -68,14 +50,8 @@ export default defineComponent({
       updateQueryParameters(displayedBodies.value ?? []);
     });
 
-    const zoom = ref(1);
-    const showNames = ref(true);
-    const showDiameters = ref(true);
     return {
       displayedBodies,
-      zoom,
-      showNames,
-      showDiameters,
     };
   },
 });
@@ -191,23 +167,11 @@ button {
   flex-direction: column;
   justify-content: start;
 }
+#footer {
+  order: 1;
+}
 
 .title {
   margin: 0;
-}
-
-.view-controls {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1em;
-  align-items: center;
-}
-
-.view-controls > label {
-  grid-column: 1;
-}
-
-.view-controls > .field {
-  grid-column: 2;
 }
 </style>

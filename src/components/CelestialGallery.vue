@@ -1,5 +1,5 @@
 <template>
-  <section class="celestial-bodies-gallery">
+  <section class="celestial-bodies-gallery" v-bind="$attrs">
     <div class="scale-container">
       <div class="scale">{{ Intl.NumberFormat().format(scale * 100) }} km</div>
       <p class="scale-disclaimer">Distances between objects not drawn to scale</p>
@@ -16,38 +16,37 @@
     </section>
     <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
   </section>
+  <teleport to="#controls">
+    <celestial-gallery-controls
+      v-model:zoom="zoom"
+      v-model:showNames="showNames"
+      v-model:show-diameters="showDiameters"
+    />
+  </teleport>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue";
 import { CelestialBodyData } from "../data/data";
-import LogSlider from "./form/LogSlider.vue";
 import CelestialBody from "./CelestialBody.vue";
+import CelestialGalleryControls from "./CelestialGalleryControls.vue";
 
 export default defineComponent({
   components: {
     CelestialBody,
-    LogSlider,
+    CelestialGalleryControls,
   },
   props: {
     bodies: {
       type: Array as PropType<CelestialBodyData[]>,
       required: true,
     },
-    zoom: {
-      type: Number,
-      default: 1,
-    },
-    showNames: {
-      type: Boolean,
-      default: true,
-    },
-    showDiameters: {
-      type: Boolean,
-      default: true,
-    },
   },
   setup(props) {
+    const zoom = ref(1);
+    const showNames = ref(true);
+    const showDiameters = ref(true);
+
     const initialScale = computed(() => {
       const largestBodyRadius = props.bodies.reduce(
         (max, body) => Math.max(max, body.radius[0]),
@@ -58,11 +57,13 @@ export default defineComponent({
     });
 
     const scale = computed(
-      () => Math.floor((initialScale.value / props.zoom) * 10) / 10
+      () => Math.floor((initialScale.value / zoom.value) * 10) / 10
     );
 
     return {
-      initialScale,
+      zoom,
+      showNames,
+      showDiameters,
       scale,
     };
   },
@@ -73,7 +74,6 @@ export default defineComponent({
 .celestial-bodies-gallery {
   position: relative;
   overflow: auto;
-  padding: 5em;
 }
 
 .empty-message {
@@ -92,13 +92,14 @@ export default defineComponent({
   gap: 1em;
   flex: 1;
   margin: auto;
+  padding: 5em;
 }
 
 .scale-container {
   padding: 2em;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 2em;
+  right: 2em;
   z-index: 10;
   text-align: right;
 }
