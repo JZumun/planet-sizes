@@ -2,7 +2,7 @@
   <section class="options">
     <label for="presets">Presets</label>
     <select name="presets" id="presets" v-model="preset" required>
-      <option :value="undefined" selected disabled hidden>Choose a preset...</option>
+      <option :value="''" selected disabled hidden>Choose a preset...</option>
       <option v-for="group in groups" :key="group.key" :value="group.key">{{group.name}}</option>
     </select>
 
@@ -48,7 +48,7 @@ export default defineComponent({
   },
   emits: ["update:modelValue"],
   setup(props, { emit }) {
-    const preset = ref<string | undefined>(undefined);
+    const preset = ref<string>("");
     const selected = computed({
       get: () => props.modelValue,
       set(val) {
@@ -56,22 +56,32 @@ export default defineComponent({
       },
     });
 
-    const clearPreset = () => (preset.value = undefined);
+    const clearPreset = () => (preset.value = "");
+    watch(selected, () => {
+      if (!(preset.value in groups)) {
+        return;
+      }
+      if (groups[preset.value].includes.length != selected.value.length) {
+        return clearPreset();
+      }
+      if (
+        selected.value.some(
+          (body) => !groups[preset.value].includes.includes(body.key)
+        )
+      ) {
+        return clearPreset();
+      }
+    });
 
     const remove = (key: string) => {
-      clearPreset();
       return (selected.value = selected.value.filter((b) => b.key !== key));
     };
     const add = (key: string) => {
       if (key in bodies) {
         selected.value = [bodies[key], ...remove(key)];
-        clearPreset();
       }
     };
     const set = (...keys: CelestialBodyData[]) => {
-      if (keys.length == 0) {
-        clearPreset();
-      }
       selected.value = keys;
     };
 
