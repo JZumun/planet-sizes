@@ -16,7 +16,12 @@ import { defineComponent, ref, watchEffect } from "vue";
 import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
 import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
-import { CelestialBodyData, bodies, groups } from "./data/data";
+import {
+  CelestialBodyData,
+  bodies,
+  groups,
+  getBodiesOfGroup,
+} from "./data/data";
 import { list } from "./utilities/text";
 
 const QKEY = "i";
@@ -72,7 +77,7 @@ export default defineComponent({
     });
 
     const setGroup = (group: string) => {
-      displayedBodies.value = groups[group].includes.map((k) => bodies[k]);
+      displayedBodies.value = getBodiesOfGroup(group);
     };
 
     return {

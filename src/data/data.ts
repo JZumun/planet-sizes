@@ -10,7 +10,6 @@ export interface CelestialBodyData {
     radius: number;
     color: string;
   };
-  groups: CelestialBodyGroup[];
 }
 
 export interface CelestialBodyGroup {
@@ -21,28 +20,18 @@ export interface CelestialBodyGroup {
 
 export const groups: Record<string, CelestialBodyGroup> = fillKeys(data.groups);
 
-export const bodies: Record<string, CelestialBodyData> = fillGroups(
-  fillKeys(data.bodies)
-);
+export const bodies: Record<string, CelestialBodyData> = fillKeys(data.bodies);
+
+export const getBodiesOfGroup = (group: string): CelestialBodyData[] =>
+  groups[group].includes.map((k) => bodies[k]);
+
+export const getGroupsOfBody = (body: string): CelestialBodyGroup[] =>
+  Object.values(groups)
+    .filter((g) => g.includes.includes(body))
+    .reverse();
 
 function fillKeys<T>(obj: Record<string, T>): Record<string, T & { key: string }> {
   return Object.fromEntries(
     Object.entries(obj).map(([key, item]) => [key, { key, ...item }])
-  );
-}
-
-function fillGroups<T>(
-  obj: Record<string, T>
-): Record<string, T & { groups: CelestialBodyGroup[] }> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, item]) => [
-      key,
-      {
-        groups: Object.values(groups)
-          .filter((g) => g.includes.includes(key))
-          .reverse(),
-        ...item,
-      },
-    ])
   );
 }

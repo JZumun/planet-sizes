@@ -32,7 +32,12 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue";
-import { CelestialBodyData, bodies, groups } from "../data/data";
+import {
+  CelestialBodyData,
+  bodies,
+  groups,
+  getBodiesOfGroup,
+} from "../data/data";
 
 export default defineComponent({
   props: {
@@ -59,24 +64,24 @@ export default defineComponent({
     };
     const add = (key: string) => {
       if (key in bodies) {
-        selected.value = [...remove(key), bodies[key]];
+        selected.value = [bodies[key], ...remove(key)];
         clearPreset();
       }
     };
-    const set = (...keys: string[]) => {
+    const set = (...keys: CelestialBodyData[]) => {
       if (keys.length == 0) {
         clearPreset();
       }
-      selected.value = keys.map((k) => bodies[k]);
+      selected.value = keys;
     };
 
     if (!selected.value || selected.value.length == 0) {
-      set("earth");
+      set(bodies["earth"]);
     }
 
     watch(preset, () => {
       if (preset.value && preset.value in groups) {
-        set(...groups[preset.value].includes);
+        set(...getBodiesOfGroup(preset.value));
       }
     });
 

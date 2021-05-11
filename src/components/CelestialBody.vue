@@ -10,7 +10,7 @@
       <div class="groups" :class="{visible: showGroups}">
         <span>Links</span>
         <ul class="group-list">
-          <li v-for="group in body.groups" :key="group.key">
+          <li v-for="group in groups" :key="group.key">
             <a :href="`?g=${group.key}`" @click.prevent="$emit('go', group.key)">{{group.name}}</a>
           </li>
         </ul>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import type { CelestialBodyData } from "../data/data";
+import { CelestialBodyData, getGroupsOfBody } from "../data/data";
 import { defineComponent, PropType, computed } from "vue";
 import { create as rand } from "random-seed";
 
@@ -86,6 +86,8 @@ export default defineComponent({
     );
     const ringColor = computed(() => props.body.rings?.color ?? "transparent");
 
+    const groups = computed(() => getGroupsOfBody(props.body.key));
+
     return {
       width,
       height,
@@ -94,6 +96,7 @@ export default defineComponent({
       friendlyDiameter,
       ringWidth,
       ringColor,
+      groups,
     };
   },
 });
