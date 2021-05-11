@@ -223,7 +223,7 @@ button {
   }
   .scale-container {
     top: 0;
-    left: 0;
+    bottom: unset !important;
   }
 }
 </style>
