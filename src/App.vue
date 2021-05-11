@@ -205,4 +205,25 @@ button {
 .title {
   margin: 0;
 }
+
+@media all and (max-width: 60em) {
+  #app {
+    grid-template-columns: 1fr;
+    grid-template-areas: "gallery" "controls";
+    max-height: initial;
+    height: auto;
+  }
+  #controls {
+    width: 100%;
+    height: auto;
+    overflow: initial;
+  }
+  #gallery {
+    min-height: calc(100vh - 5em);
+  }
+  .scale-container {
+    top: 0;
+    left: 0;
+  }
+}
 </style>
