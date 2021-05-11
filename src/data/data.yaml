@@ -35,19 +35,59 @@ groups:
       - haumea
       - makemake
       - eris
+  inner-planets:
+    name: Inner Planets
+    includes:
+      - mercury
+      - venus
+      - earth
+      - mars
+      - ceres
+  gas-giants:
+    name: Gas Giants
+    includes:
+      - jupiter
+      - saturn
+      - uranus
+      - neptune
+  major-moons:
+    name: Largest Moons
+    includes:
+      - ganymede
+      - titan
+      - callisto
+      - io
+      - moon
+      - europa
+      - triton
+      - titania
+      - rhea
+      - oberon
+      - iapetus
+      - charon
+      - umbriel
+      - ariel
+      - dione
+      - tethys
+      - dysnomia
+      - enceladus
+      - miranda
+      - proteus
+      - mimas
+      - nereid
   earth-system:
-    name: Earth and Moon
+    name: Earth · Luna
     includes:
       - earth
       - moon
   mars-system:
-    name: Martian System
+    name: Mars · Moons
     includes:
       - mars
       - phobos
       - deimos
   jupiter-system:
-    name: Jovian System
+    name: Jupiter · Galilean Moons
     includes:
       - jupiter
       - io
@@ -55,19 +95,50 @@ groups:
       - ganymede
       - callisto
   saturn-system:
-    name: Saturnian System
+    name: Saturn · Major Moons
     includes:
       - saturn
+      - mimas
+      - enceladus
+      - tethys
+      - dione
+      - rhea
       - titan
+      - iapetus
+  uranus-system:
+    name: Uranus · Major Moons
+    includes:
+      - uranus
+      - miranda
+      - ariel
+      - umbriel
+      - titania
+      - oberon
+  neptune-system:
+    name: Neptune · Major Moons
+    includes:
+      - neptune
+      - proteus
+      - triton
+      - nereid
   pluto-system:
-    name: Pluto and Charon
+    name: Pluto · Moons
     includes:
       - pluto
       - charon
+      - styx
+      - nix
+      - kerberos
+      - hydra
+  eris-system:
+    name: Eris · Dysnomia
+    includes:
+      - eris
+      - dysnomia
 bodies:
   sun:
     name: The Sun
-    color: "#ffbf00"
+    color: "#ffe769"
     radius:
       - 695_700
       - 695_700
@@ -214,14 +285,110 @@ bodies:
     radius:
       - 2410.3
 
+  mimas:
+    name: Mimas
+    radius:
+      - 207.8
+      - 190.6
+  enceladus:
+    name: Enceladus
+    color: "#97aec3"
+    radius:
+      - 256.6
+      - 248.3
+  tethys:
+    name: Tethys
+    radius:
+      - 538.4
+      - 526.3
+  dione:
+    name: Dione
+    radius:
+      - 564.4
+      - 559.6
+  rhea:
+    name: Rhea
+    radius:
+      - 766.2
+      - 762.2
   titan:
     name: Titan
     color: "#ad7000"
     radius:
       - 2574.73
+  iapetus:
+    name: Iapetus
+    radius:
+      - 746.0
+      - 712
+
+  miranda:
+    name: Miranda
+    radius:
+      - 240.5
+      - 233
+  ariel:
+    name: Ariel
+    radius:
+      - 581
+      - 577.5
+  umbriel:
+    name: Umbriel
+    color: "#222"
+    radius:
+      - 584.7
+  titania:
+    name: Titania
+    radius:
+      - 788.4
+  oberon:
+    name: Oberon
+    radius:
+      - 761.4
+
+  proteus:
+    name: Proteus
+    radius:
+      - 218
+      - 201
+  triton:
+    name: Triton
+    color: "#e5b7bf"
+    radius:
+      - 1354.5
+      - 1352.5
+  nereid:
+    name: Nereid
+    radius:
+      - 178.5
 
   charon:
     name: Charon
-    color: "#666"
+    color: "#333"
     radius:
       - 606
+  styx:
+    name: Styx
+    radius:
+      - 8
+      - 4
+  nix:
+    name: Nix
+    radius:
+      - 24.9
+      - 15.55
+  kerberos:
+    name: Kerberos
+    radius:
+      - 9.5
+      - 4.5
+  hydra:
+    name: Hydra
+    radius:
+      - 25.45
+      - 15.45
+
+  dysnomia:
+    name: Dysnomia
+    radius:
+      - 350

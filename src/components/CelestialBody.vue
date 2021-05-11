@@ -18,7 +18,7 @@ import { create as rand } from "random-seed";
 
 function generateRandomGray(seed: string) {
   const r = rand(seed);
-  const bias = 64 + r.intBetween(-30, 30);
+  const bias = 100 + r.intBetween(-30, 30);
   function generateGrayComponent() {
     return (r.intBetween(-4, 4) + bias).toString(16);
   }
