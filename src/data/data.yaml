@@ -104,8 +104,8 @@ bodies:
   ceres:
     name: Ceres
     radius:
-      - 964.4
-      - 891.8
+      - 482.2
+      - 445.9
     tilt: 4
   jupiter:
     name: Jupiter
