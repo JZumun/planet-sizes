@@ -8,7 +8,7 @@
     </fieldset>
     <app-footer id="footer" />
   </section>
-  <celestial-bodies id="gallery" :bodies="displayedBodies" />
+  <celestial-bodies id="gallery" :bodies="displayedBodies" @go="setGroup" />
 </template>
 
 <script lang="ts">
@@ -16,10 +16,11 @@ import { defineComponent, ref, watchEffect } from "vue";
 import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
 import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
-import { CelestialBodyData, bodies } from "./data/data";
+import { CelestialBodyData, bodies, groups } from "./data/data";
 import { list } from "./utilities/text";
 
 const QKEY = "i";
+const GKEY = "g";
 const SEPARATOR = " ";
 function updateQueryParameters(bodies: CelestialBodyData[]) {
   const params = new URLSearchParams();
@@ -30,7 +31,19 @@ function updateQueryParameters(bodies: CelestialBodyData[]) {
 function retrieveFromQueryParameters() {
   const params = new URLSearchParams(window.location.search);
   const values = params.get(QKEY);
-  return values?.split(SEPARATOR) ?? [];
+  if (values) {
+    return values
+      .split(SEPARATOR)
+      .map((k) => bodies[k])
+      .filter((b) => b);
+  }
+
+  const preset = params.get(GKEY);
+  if (preset && preset in groups) {
+    return groups[preset].includes.map((k) => bodies[k]);
+  }
+
+  return [];
 }
 
 const BASE_TITLE = "The Size of Planets";
@@ -51,8 +64,6 @@ export default defineComponent({
   setup() {
     const displayedBodies = ref<CelestialBodyData[]>(
       retrieveFromQueryParameters()
-        .map((k) => bodies[k])
-        .filter((b) => b)
     );
 
     watchEffect(() => {
@@ -60,8 +71,13 @@ export default defineComponent({
       updateTitle(displayedBodies.value ?? []);
     });
 
+    const setGroup = (group: string) => {
+      displayedBodies.value = groups[group].includes.map((k) => bodies[k]);
+    };
+
     return {
       displayedBodies,
+      setGroup,
     };
   },
 });

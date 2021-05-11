@@ -12,6 +12,8 @@
         :scale="scale"
         :showName="showNames"
         :showDiameter="showDiameters"
+        :showGroups="bodies.length == 1"
+        @go="$emit('go',$event)"
       />
     </section>
     <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
@@ -42,6 +44,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ["go"],
   setup(props) {
     const zoom = ref(1);
     const showNames = ref(true);
@@ -93,6 +96,8 @@ export default defineComponent({
   flex: 1;
   margin: auto;
   padding: 5em;
+  position: relative;
+  z-index: 2;
 }
 
 .scale-container {
@@ -102,6 +107,7 @@ export default defineComponent({
   right: 2em;
   z-index: 10;
   text-align: right;
+  z-index: 0;
 }
 
 .scale::before {

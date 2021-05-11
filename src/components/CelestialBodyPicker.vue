@@ -71,7 +71,7 @@ export default defineComponent({
     };
 
     if (!selected.value || selected.value.length == 0) {
-      set(...groups["earth-system"].includes);
+      set("earth");
     }
 
     watch(preset, () => {

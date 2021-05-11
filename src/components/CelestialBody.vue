@@ -7,6 +7,14 @@
     <div class="labels">
       <p v-if="showName" class="name">{{ body.name }}</p>
       <p v-if="showDiameter" class="size">{{ friendlyDiameter }}</p>
+      <div class="groups" :class="{visible: showGroups}">
+        <span>Links</span>
+        <ul class="group-list">
+          <li v-for="group in body.groups" :key="group.key">
+            <a :href="`?g=${group.key}`" @click.prevent="$emit('go', group.key)">{{group.name}}</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -47,7 +55,12 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    showGroups: {
+      type: Boolean,
+      default: true,
+    },
   },
+  emits: ["go"],
   setup(props) {
     const width = computed(
       () => `${(props.body.radius[0] * 2) / props.scale}px`
@@ -148,5 +161,52 @@ p {
 .size {
   font-size: 0.8em;
   opacity: 0.5;
+}
+
+.groups {
+  height: 0;
+  opacity: 0;
+  margin-left: -1em;
+  margin-right: -1em;
+  transition: opacity 0.5s;
+}
+
+.groups.visible {
+  opacity: 1;
+}
+
+.celestial-body:hover .groups {
+  opacity: 1;
+}
+.groups span {
+  display: block;
+  color: #222;
+  padding: 0.5em;
+  padding-top: 2em;
+  font-size: 0.75em;
+  border-bottom: 1px solid #222;
+}
+.group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  margin: 0;
+  font-size: 0.75em;
+}
+.group-list li {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.group-list a {
+  display: block;
+  color: #444;
+  text-decoration: none;
+  transition: transform 0.25s;
+}
+.group-list a:hover {
+  color: #ddd;
+  transform: scale(1.1);
 }
 </style>
