@@ -5,16 +5,19 @@
       <p class="scale-disclaimer">Distances between objects not drawn to scale</p>
     </div>
     <section class="celestial-bodies" v-if="bodies.length > 0">
-      <celestial-body
-        v-for="body in bodies"
-        v-bind:key="body.key"
-        :body="body"
-        :scale="scale"
-        :showName="showNames"
-        :showDiameter="showDiameters"
-        :showGroups="bodies.length == 1"
-        @go="$emit('go',$event)"
-      />
+      <transition-group name="fade">
+        <celestial-body
+          class="celestial-body-item"
+          v-for="body in bodies"
+          v-bind:key="body.key"
+          :body="body"
+          :scale="scale"
+          :showName="showNames"
+          :showDiameter="showDiameters"
+          :showGroups="bodies.length == 1"
+          @go="$emit('go',$event)"
+        />
+      </transition-group>
     </section>
     <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
   </section>
@@ -123,5 +126,27 @@ export default defineComponent({
 .scale-disclaimer {
   color: #444;
   font-size: 0.75em;
+}
+
+.celestial-body-item {
+  transition: all 1s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-enter-active >>> .body,
+.fade-leave-active >>> .body {
+  transition: all 1s;
+}
+.fade-leave-to >>> .body {
+  height: 0;
+  width: 0;
+}
+
+.fade-leave-active {
+  position: absolute;
 }
 </style>
