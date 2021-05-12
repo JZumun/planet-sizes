@@ -130,6 +130,8 @@ export default defineComponent({
 
 .celestial-body-item {
   transition: all 1s;
+  position: relative;
+  z-index: 1;
 }
 .fade-enter-from,
 .fade-leave-to {
@@ -137,16 +139,13 @@ export default defineComponent({
   transform: translateY(30px);
 }
 
-.fade-enter-active >>> .body,
-.fade-leave-active >>> .body {
-  transition: all 1s;
-}
-.fade-leave-to >>> .body {
+.fade-leave-to :deep(.body) {
   height: 0;
   width: 0;
 }
 
 .fade-leave-active {
   position: absolute;
+  z-index: -1;
 }
 </style>

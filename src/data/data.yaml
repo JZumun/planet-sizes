@@ -267,7 +267,7 @@ bodies:
 
   io:
     name: Io
-    color: "#ffda4a"
+    color: "#ffab52"
     radius:
       - 1830
       - 1815.3
@@ -278,6 +278,7 @@ bodies:
       - 1560.8
   ganymede:
     name: Ganymede
+    color: "#9eabbb"
     radius:
       - 2634.1
   callisto:
@@ -313,7 +314,7 @@ bodies:
       - 762.2
   titan:
     name: Titan
-    color: "#ad7000"
+    color: "#ff9268"
     radius:
       - 2574.73
   iapetus:

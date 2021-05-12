@@ -126,8 +126,6 @@ export default defineComponent({
   height: v-bind(height);
   width: v-bind(width);
   border-radius: 100%;
-
-  transition: all 0.5s;
 }
 .body::before {
   --equator-thickness: 1px;
@@ -142,7 +140,6 @@ export default defineComponent({
   left: 0;
   top: calc(50% - var(--equator-thickness) / 2);
   opacity: 0.4;
-  transition: all 0.5s;
 }
 
 .rings {
@@ -153,7 +150,12 @@ export default defineComponent({
   background: v-bind(ringColor);
   opacity: 0.5;
   z-index: -1;
-  transition: all 0.5s;
+}
+
+.body,
+.body::before,
+.rings {
+  transition: height 1s, width 1s;
 }
 
 p {
