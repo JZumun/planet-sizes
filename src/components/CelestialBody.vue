@@ -126,6 +126,7 @@ export default defineComponent({
   height: v-bind(height);
   width: v-bind(width);
   border-radius: 100%;
+  overflow: hidden;
 }
 .body::before {
   --equator-thickness: 1px;
@@ -141,7 +142,18 @@ export default defineComponent({
   top: calc(50% - var(--equator-thickness) / 2);
   opacity: 0.4;
 }
-
+.body::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 85%;
+  background: #ffffff21;
+  position: absolute;
+  top: 0;
+  right: 19%;
+  mix-blend-mode: overlay;
+  border-radius: 100%;
+}
 .rings {
   grid-area: figure;
   height: 1px;
