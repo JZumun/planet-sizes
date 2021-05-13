@@ -7,18 +7,13 @@
     </select>
 
     <label for="bodies">Add:</label>
-    <input
-      type="search"
+    <data-search
       id="bodies"
       class="field"
       placeholder="Look up..."
-      list="body-list"
       v-model="searchInput"
-      @blur="searchInput = ''"
+      :data="bodyData"
     />
-    <datalist id="body-list">
-      <option v-for="body in bodies" :key="body.key" :value="body.key">{{ body.name }}</option>
-    </datalist>
 
     <div class="field">
       <div class="body-tag" v-for="body in selected" :key="body.key">
@@ -31,12 +26,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from "vue";
+import { computed, defineComponent, PropType, Ref, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { CelestialBodyData, bodies, groups } from "../data/data";
 import { queryValueOrFirst } from "../routes";
+import DataSearch from "./form/DataSearch.vue";
 
 export default defineComponent({
+  components: {
+    DataSearch,
+  },
   props: {
     bodies: {
       type: Array as PropType<CelestialBodyData[]>,
@@ -70,12 +69,17 @@ export default defineComponent({
       selected.value = [];
     };
 
-    const searchInput = ref("");
-    watch(searchInput, (val) =>
-      add(val) ? (searchInput.value = "") : undefined
+    const searchInput: Ref<CelestialBodyData | null> = ref(null);
+    const bodyData = Object.fromEntries(
+      Object.values(bodies).map((b) => [b.name, b])
     );
+    watch(searchInput, (val) => {
+      if (val && add(val.key)) {
+        searchInput.value = null;
+      }
+    });
     return {
-      bodies,
+      bodyData,
       groups,
       preset,
       selected,
