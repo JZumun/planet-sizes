@@ -1,4 +1,7 @@
 <template>
+  <metainfo>
+    <template v-slot:title="{ content }">{{ content }}</template>
+  </metainfo>
   <section id="controls">
     <h1 class="title">The Size of Planets</h1>
     <p>A tool for comparing the sizes of celestial bodies in the solar system.</p>
@@ -12,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect } from "vue";
+import { computed, defineComponent, ref, watchEffect } from "vue";
 import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
 import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
@@ -23,6 +26,7 @@ import {
   getBodiesOfGroup,
 } from "./data/data";
 import { list } from "./utilities/text";
+import { useMeta } from "vue-meta";
 
 const QKEY = "i";
 const GKEY = "g";
@@ -52,13 +56,6 @@ function retrieveFromQueryParameters() {
 }
 
 const BASE_TITLE = "The Size of Planets";
-function updateTitle(bodies: CelestialBodyData[]) {
-  window.document.title =
-    bodies.length == 0
-      ? BASE_TITLE
-      : `${BASE_TITLE} - ${list(bodies.map((b) => b.name))}`;
-}
-
 export default defineComponent({
   name: "App",
   components: {
@@ -73,8 +70,30 @@ export default defineComponent({
 
     watchEffect(() => {
       updateQueryParameters(displayedBodies.value ?? []);
-      updateTitle(displayedBodies.value ?? []);
     });
+
+    useMeta(
+      computed(() => {
+        const bodies = displayedBodies.value.map((b) => b.name);
+        const title = bodies.length
+          ? `${BASE_TITLE} - ${list(bodies)}`
+          : BASE_TITLE;
+        const description = `Compare the sizes of celestial bodies in the solar system.`;
+        const image = "/planets.png";
+        return {
+          title,
+          description,
+          og: {
+            title,
+            description,
+            image,
+          },
+          twitter: {
+            card: "summary_large_image",
+          },
+        };
+      })
+    );
 
     const setGroup = (group: string) => {
       displayedBodies.value = getBodiesOfGroup(group);
