@@ -86,6 +86,13 @@ groups:
       - mars
       - phobos
       - deimos
+  major-asteroids:
+    name: Largest Asteroids
+    includes:
+      - ceres
+      - vesta
+      - pallas
+      - hygiea
   jupiter-system:
     name: Jupiter · Galilean Moons
     includes:
@@ -105,6 +112,7 @@ groups:
       - rhea
       - titan
       - iapetus
+      - phoebe
   uranus-system:
     name: Uranus · Major Moons
     includes:
@@ -161,6 +169,9 @@ bodies:
   earth:
     name: Earth
     color: "#397abe"
+    background:
+      - "#397abe"
+      - "#4da426"
     radius:
       - 6378.137
       - 6356.72
@@ -322,6 +333,11 @@ bodies:
     radius:
       - 746.0
       - 712
+  phoebe:
+    name: Phoebe
+    radius:
+      - 109.5
+      - 102
 
   miranda:
     name: Miranda
@@ -393,3 +409,22 @@ bodies:
     name: Dysnomia
     radius:
       - 350
+
+  vesta:
+    name: Vesta
+    radius:
+      - 286.5
+      - 223
+  pallas:
+    name: Pallas
+      - 275
+      - 238
+  hygiea:
+    name: Hygiea
+      - 225
+      - 212
+  eros:
+    name: Eros
+    radius:
+      - 17.2
+      - 5.6

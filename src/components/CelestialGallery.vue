@@ -62,8 +62,8 @@ export default defineComponent({
       return Math.max(1, largestBodyRadius / 100);
     });
 
-    const scale = computed(
-      () => Math.floor((initialScale.value / zoom.value) * 10) / 10
+    const scale = computed(() =>
+      Math.max(1, Math.floor((initialScale.value / zoom.value) * 10) / 10)
     );
 
     return {
