@@ -13,8 +13,8 @@
       class="field"
       placeholder="Look up..."
       list="body-list"
-      @input="onInput($event.target)"
-      @blur="onBlur($event.target)"
+      v-model="searchInput"
+      @blur="searchInput = ''"
     />
     <datalist id="body-list">
       <option v-for="body in bodies" :key="body.key" :value="body.key">{{ body.name }}</option>
@@ -26,51 +26,35 @@
         <button class="remove" @click.prevent="remove(body.key)">✕</button>
       </div>
     </div>
-    <button class="field" @click.prevent="set()">Clear</button>
+    <button class="field" @click.prevent="clear()">Clear</button>
   </section>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref, watch } from "vue";
-import {
-  CelestialBodyData,
-  bodies,
-  groups,
-  getBodiesOfGroup,
-} from "../data/data";
+import { useRoute, useRouter } from "vue-router";
+import { CelestialBodyData, bodies, groups } from "../data/data";
+import { queryValueOrFirst } from "../routes";
 
 export default defineComponent({
   props: {
-    modelValue: {
+    bodies: {
       type: Array as PropType<CelestialBodyData[]>,
       required: true,
     },
   },
-  emits: ["update:modelValue"],
-  setup(props, { emit }) {
-    const preset = ref<string>("");
-    const selected = computed({
-      get: () => props.modelValue,
-      set(val) {
-        emit("update:modelValue", val);
-      },
+  setup(props) {
+    const router = useRouter();
+    const route = useRoute();
+
+    const preset = computed({
+      get: () => queryValueOrFirst(route.query.g) ?? "",
+      set: (val) => router.replace(`/?g=${val}`),
     });
 
-    const clearPreset = () => (preset.value = "");
-    watch(selected, () => {
-      if (!(preset.value in groups)) {
-        return;
-      }
-      if (groups[preset.value].includes.length != selected.value.length) {
-        return clearPreset();
-      }
-      if (
-        selected.value.some(
-          (body) => !groups[preset.value].includes.includes(body.key)
-        )
-      ) {
-        return clearPreset();
-      }
+    const selected = computed({
+      get: () => props.bodies,
+      set: (val) => router.replace(`/?i=${val.map((b) => b.key).join(" ")}`),
     });
 
     const remove = (key: string) => {
@@ -79,36 +63,26 @@ export default defineComponent({
     const add = (key: string) => {
       if (key in bodies) {
         selected.value = [bodies[key], ...remove(key)];
+        return key;
       }
     };
-    const set = (...keys: CelestialBodyData[]) => {
-      selected.value = keys;
+    const clear = () => {
+      selected.value = [];
     };
 
-    if (!selected.value || selected.value.length == 0) {
-      set(bodies["earth"]);
-    }
-
-    watch(preset, () => {
-      if (preset.value && preset.value in groups) {
-        set(...getBodiesOfGroup(preset.value));
-      }
-    });
-
-    const onInput = (target: EventTarget | null) =>
-      add((target as HTMLInputElement).value);
-    const onBlur = (target: EventTarget | null) =>
-      ((target as HTMLInputElement).value = "");
+    const searchInput = ref("");
+    watch(searchInput, (val) =>
+      add(val) ? (searchInput.value = "") : undefined
+    );
     return {
-      selected,
       bodies,
       groups,
+      preset,
+      selected,
       remove,
       add,
-      set,
-      preset,
-      onInput,
-      onBlur,
+      clear,
+      searchInput,
     };
   },
 });

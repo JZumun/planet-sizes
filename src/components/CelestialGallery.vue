@@ -15,13 +15,16 @@
           :showName="showNames"
           :showDiameter="showDiameters"
           :showGroups="bodies.length == 1"
-          @go="$emit('go',$event)"
         />
       </transition-group>
     </section>
     <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
   </section>
-  <teleport to="#controls">
+  <teleport to="#sidebar">
+    <fieldset>
+      <legend>Explore</legend>
+      <celestial-body-picker :bodies="bodies" />
+    </fieldset>
     <celestial-gallery-controls
       v-model:zoom="zoom"
       v-model:showNames="showNames"
@@ -31,14 +34,16 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from "vue";
+import { computed, defineComponent, PropType, ref } from "vue";
 import { CelestialBodyData } from "../data/data";
 import CelestialBody from "./CelestialBody.vue";
+import CelestialBodyPicker from "./CelestialBodyPicker.vue";
 import CelestialGalleryControls from "./CelestialGalleryControls.vue";
 
 export default defineComponent({
   components: {
     CelestialBody,
+    CelestialBodyPicker,
     CelestialGalleryControls,
   },
   props: {
@@ -47,7 +52,6 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["go"],
   setup(props) {
     const zoom = ref(1);
     const showNames = ref(true);

@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import LogSlider from "./form/LogSlider.vue";
 
 export default defineComponent({

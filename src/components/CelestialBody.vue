@@ -11,7 +11,7 @@
         <span>Links</span>
         <ul class="group-list">
           <li v-for="group in groups" :key="group.key">
-            <a :href="`?g=${group.key}`" @click.prevent="$emit('go', group.key)">{{group.name}}</a>
+            <router-link :to="`?g=${group.key}`" replace>{{group.name}}</router-link>
           </li>
         </ul>
       </div>

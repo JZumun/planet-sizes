@@ -1,82 +1,22 @@
 <template>
-  <metainfo>
-    <template v-slot:title="{ content }">{{ content }}</template>
-  </metainfo>
-  <section id="controls">
+  <section id="sidebar">
     <h1 class="title">The Size of Planets</h1>
     <p>A tool for comparing the sizes of celestial bodies in the solar system.</p>
-    <fieldset>
-      <legend>Explore</legend>
-      <celestial-body-picker v-model="displayedBodies" />
-    </fieldset>
     <app-footer id="footer" />
   </section>
-  <celestial-bodies id="gallery" :bodies="displayedBodies" @go="setGroup" />
+  <router-view id="main" />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect } from "vue";
+import { defineComponent } from "vue";
 import AppFooter from "./components/Footer.vue";
 import CelestialBodies from "./components/CelestialGallery.vue";
-import CelestialBodyPicker from "./components/CelestialBodyPicker.vue";
-import {
-  CelestialBodyData,
-  bodies,
-  groups,
-  getBodiesOfGroup,
-} from "./data/data";
-
-const QKEY = "i";
-const GKEY = "g";
-const SEPARATOR = " ";
-function updateQueryParameters(bodies: CelestialBodyData[]) {
-  const params = new URLSearchParams();
-  params.set(QKEY, bodies.map((b) => b.key).join(SEPARATOR));
-  history.replaceState(null, (null as any) as string, `?${params.toString()}`);
-}
-
-function retrieveFromQueryParameters() {
-  const params = new URLSearchParams(window.location.search);
-  const values = params.get(QKEY);
-  if (values) {
-    return values
-      .split(SEPARATOR)
-      .map((k) => bodies[k])
-      .filter((b) => b);
-  }
-
-  const preset = params.get(GKEY);
-  if (preset && preset in groups) {
-    return groups[preset].includes.map((k) => bodies[k]);
-  }
-
-  return [];
-}
 
 export default defineComponent({
   name: "App",
   components: {
     AppFooter,
     CelestialBodies,
-    CelestialBodyPicker,
-  },
-  setup() {
-    const displayedBodies = ref<CelestialBodyData[]>(
-      retrieveFromQueryParameters()
-    );
-
-    watchEffect(() => {
-      updateQueryParameters(displayedBodies.value ?? []);
-    });
-
-    const setGroup = (group: string) => {
-      displayedBodies.value = getBodiesOfGroup(group);
-    };
-
-    return {
-      displayedBodies,
-      setGroup,
-    };
   },
 });
 </script>
@@ -174,12 +114,12 @@ button {
   max-width: 100vw;
   overflow: hidden;
 }
-#gallery {
+#main {
   grid-area: gallery;
   height: 100%;
   width: 100%;
 }
-#controls {
+#sidebar {
   width: 25em;
   padding: 1em;
   grid-area: controls;
@@ -206,12 +146,12 @@ button {
     max-height: initial;
     height: auto;
   }
-  #controls {
+  #sidebar {
     width: 100%;
     height: auto;
     overflow: initial;
   }
-  #gallery {
+  #main {
     min-height: calc(100vh - 5em);
   }
   .scale-container {
