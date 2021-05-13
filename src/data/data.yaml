@@ -417,10 +417,12 @@ bodies:
       - 223
   pallas:
     name: Pallas
+    radius:
       - 275
       - 238
   hygiea:
     name: Hygiea
+    radius:
       - 225
       - 212
   eros:
