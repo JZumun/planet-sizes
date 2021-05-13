@@ -25,8 +25,6 @@ import {
   groups,
   getBodiesOfGroup,
 } from "./data/data";
-import { list } from "./utilities/text";
-import { useMeta } from "vue-meta";
 
 const QKEY = "i";
 const GKEY = "g";
