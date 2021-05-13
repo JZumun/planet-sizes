@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { CelestialBodyData, getGroupsOfBody } from "../../data/data";
+import { Body, getGroupsOfBody } from "../../data/data";
 import { defineComponent, PropType, computed } from "vue";
 import { create as rand } from "random-seed";
 
@@ -40,7 +40,7 @@ function generateRandomGray(seed: string) {
 export default defineComponent({
   props: {
     body: {
-      type: Object as PropType<CelestialBodyData>,
+      type: Object as PropType<Body>,
       required: true,
     },
     scale: {

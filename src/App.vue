@@ -72,9 +72,14 @@ select {
   border: 1px solid #222;
 }
 
-option {
+option,
+optgroup {
   color: #ddd;
   background: #444;
+}
+
+optgroup {
+  font-style: normal;
 }
 
 select:invalid,
@@ -147,6 +152,7 @@ button {
     min-height: calc(100vh - 5em);
   }
   .scale-container {
+    position: sticky !important;
     top: 0;
     bottom: unset !important;
   }

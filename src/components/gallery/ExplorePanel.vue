@@ -3,7 +3,13 @@
     <label for="presets">Presets</label>
     <select name="presets" id="presets" v-model="preset" required>
       <option :value="''" selected disabled hidden>Choose a preset...</option>
-      <option v-for="group in groups" :key="group.key" :value="group.key">{{group.name}}</option>
+      <optgroup v-for="collection in presets" :key="collection.name" :label="collection.name">
+        <option
+          v-for="scene in collection.includes"
+          :key="scene.key"
+          :value="scene.key"
+        >{{scene.name}}</option>
+      </optgroup>
     </select>
 
     <label for="bodies">Add:</label>
@@ -28,7 +34,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, Ref, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CelestialBodyData, bodies, groups } from "../../data/data";
+import { Body, bodies, presets } from "../../data/data";
 import { queryValueOrFirst } from "../../routes";
 import DataSearch from "../form/DataSearch.vue";
 import SidebarPanel from "../sidebar/SidebarPanel.vue";
@@ -40,7 +46,7 @@ export default defineComponent({
   },
   props: {
     bodies: {
-      type: Array as PropType<CelestialBodyData[]>,
+      type: Array as PropType<Body[]>,
       required: true,
     },
   },
@@ -71,7 +77,7 @@ export default defineComponent({
       selected.value = [];
     };
 
-    const searchInput: Ref<CelestialBodyData | null> = ref(null);
+    const searchInput: Ref<Body | null> = ref(null);
     const bodyData = Object.fromEntries(
       Object.values(bodies).map((b) => [b.name, b])
     );
@@ -82,7 +88,7 @@ export default defineComponent({
     });
     return {
       bodyData,
-      groups,
+      presets,
       preset,
       selected,
       remove,

@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue";
-import { CelestialBodyData } from "../../data/data";
+import { Body } from "../../data/data";
 import CelestialBody from "./CelestialBody.vue";
 import ExplorePanel from "./ExplorePanel.vue";
 import ControlPanel from "./ControlPanel.vue";
@@ -45,7 +45,7 @@ export default defineComponent({
   },
   props: {
     bodies: {
-      type: Array as PropType<CelestialBodyData[]>,
+      type: Array as PropType<Body[]>,
       required: true,
     },
   },

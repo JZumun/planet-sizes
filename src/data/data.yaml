@@ -1,6 +1,28 @@
 groups:
   solar-system:
-    name: The Solar System
+    name: Solar System Groups
+    includes:
+      - solar-system
+      - major-planets
+      - dwarf-planets
+      - inner-planets
+      - gas-giants
+      - major-moons
+      - major-asteroids
+  planet-systems:
+    name: Planets and Moons
+    includes:
+      - earth-system
+      - mars-system
+      - jupiter-system
+      - saturn-system
+      - uranus-system
+      - neptune-system
+      - pluto-system
+      - eris-system
+scenes:
+  solar-system:
+    name: Solar System
     includes:
       - sun
       - mercury

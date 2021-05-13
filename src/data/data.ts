@@ -1,6 +1,6 @@
 import data from "./data.yaml";
 
-export interface CelestialBodyData {
+export interface Body {
   key: string;
   name: string;
   radius: [number] | [number, number];
@@ -12,21 +12,33 @@ export interface CelestialBodyData {
   };
 }
 
-export interface CelestialBodyGroup {
+export interface Scene {
   key: string;
   name: string;
   includes: string[];
 }
 
-export const groups: Record<string, CelestialBodyGroup> = fillKeys(data.groups);
+export interface Group {
+  name: string;
+  includes: Scene[];
+}
 
-export const bodies: Record<string, CelestialBodyData> = fillKeys(data.bodies);
+export const scenes: Record<string, Scene> = fillKeys(data.scenes);
 
-export const getBodiesOfGroup = (group: string): CelestialBodyData[] =>
-  groups[group].includes.map((k) => bodies[k]);
+export const bodies: Record<string, Body> = fillKeys(data.bodies);
 
-export const getGroupsOfBody = (body: string): CelestialBodyGroup[] =>
-  Object.values(groups)
+export const presets: Group[] = Object.values(data.groups).map((x: any) => {
+  return {
+    name: x.name,
+    includes: x.includes.map((k: string) => scenes[k]),
+  };
+});
+
+export const getBodiesOfGroup = (group: string): Body[] =>
+  scenes[group].includes.map((k) => bodies[k]);
+
+export const getGroupsOfBody = (body: string): Scene[] =>
+  Object.values(scenes)
     .filter((g) => g.includes.includes(body))
     .reverse();
 
