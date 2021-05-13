@@ -1,22 +1,23 @@
 <template>
-  <fieldset class="view-controls">
-    <legend>View Controls</legend>
+  <sidebar-panel name="View Controls">
     <label for="zoom">Zoom</label>
     <log-slider class="field" id="zoom" v-model="zoomRef" :min="1 / 10" :max="10" />
     <label for="show-names">Show Names</label>
     <input type="checkbox" name="show-names" id="show-names" v-model="showNamesRef" />
     <label for="show-diameters">Show Diameters</label>
     <input type="checkbox" name="show-diameters" id="show-diameters" v-model="showDiametersRef" />
-  </fieldset>
+  </sidebar-panel>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
-import LogSlider from "./form/LogSlider.vue";
+import LogSlider from "../form/LogSlider.vue";
+import SidebarPanel from "../sidebar/SidebarPanel.vue";
 
 export default defineComponent({
   components: {
     LogSlider,
+    SidebarPanel,
   },
   props: {
     zoom: {
@@ -52,21 +53,3 @@ export default defineComponent({
   },
 });
 </script>
-
-
-<style scoped>
-.view-controls {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1em;
-  align-items: center;
-}
-
-.view-controls > label {
-  grid-column: 1;
-}
-
-.view-controls > .field {
-  grid-column: 2;
-}
-</style>

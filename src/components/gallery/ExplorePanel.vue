@@ -1,5 +1,5 @@
 <template>
-  <section class="options">
+  <sidebar-panel name="Explore">
     <label for="presets">Presets</label>
     <select name="presets" id="presets" v-model="preset" required>
       <option :value="''" selected disabled hidden>Choose a preset...</option>
@@ -22,19 +22,21 @@
       </div>
     </div>
     <button class="field" @click.prevent="clear()">Clear</button>
-  </section>
+  </sidebar-panel>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType, Ref, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { CelestialBodyData, bodies, groups } from "../data/data";
-import { queryValueOrFirst } from "../routes";
-import DataSearch from "./form/DataSearch.vue";
+import { CelestialBodyData, bodies, groups } from "../../data/data";
+import { queryValueOrFirst } from "../../routes";
+import DataSearch from "../form/DataSearch.vue";
+import SidebarPanel from "../sidebar/SidebarPanel.vue";
 
 export default defineComponent({
   components: {
     DataSearch,
+    SidebarPanel,
   },
   props: {
     bodies: {

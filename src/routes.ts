@@ -10,7 +10,7 @@ export const router = createRouter({
     {
       path: "/",
       name: "Main",
-      component: () => import("./components/CelestialGallery.vue"),
+      component: () => import("./components/gallery/Gallery.vue"),
       props(route) {
         let displayedBodies: CelestialBodyData[] = [];
         const preset = queryValueOrFirst(route.query.g);

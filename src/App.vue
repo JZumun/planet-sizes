@@ -10,13 +10,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AppFooter from "./components/Footer.vue";
-import CelestialBodies from "./components/CelestialGallery.vue";
 
 export default defineComponent({
   name: "App",
   components: {
     AppFooter,
-    CelestialBodies,
   },
 });
 </script>
@@ -58,13 +56,6 @@ body {
   background-color: #444;
   border-radius: 10px;
   border: 3px solid #111;
-}
-
-fieldset {
-  border-color: #333;
-  margin: 0;
-  margin-top: 1em;
-  padding: 1em;
 }
 
 input,
@@ -128,6 +119,7 @@ button {
   padding: 1em;
   padding-top: 2em;
   display: flex;
+  gap: 1em;
   flex-direction: column;
   justify-content: start;
 }

@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { CelestialBodyData, getGroupsOfBody } from "../data/data";
+import { CelestialBodyData, getGroupsOfBody } from "../../data/data";
 import { defineComponent, PropType, computed } from "vue";
 import { create as rand } from "random-seed";
 

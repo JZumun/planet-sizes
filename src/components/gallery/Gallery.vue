@@ -21,11 +21,8 @@
     <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
   </section>
   <teleport to="#sidebar">
-    <fieldset>
-      <legend>Explore</legend>
-      <celestial-body-picker :bodies="bodies" />
-    </fieldset>
-    <celestial-gallery-controls
+    <explore-panel :bodies="bodies" />
+    <control-panel
       v-model:zoom="zoom"
       v-model:showNames="showNames"
       v-model:show-diameters="showDiameters"
@@ -35,16 +32,16 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from "vue";
-import { CelestialBodyData } from "../data/data";
+import { CelestialBodyData } from "../../data/data";
 import CelestialBody from "./CelestialBody.vue";
-import CelestialBodyPicker from "./CelestialBodyPicker.vue";
-import CelestialGalleryControls from "./CelestialGalleryControls.vue";
+import ExplorePanel from "./ExplorePanel.vue";
+import ControlPanel from "./ControlPanel.vue";
 
 export default defineComponent({
   components: {
     CelestialBody,
-    CelestialBodyPicker,
-    CelestialGalleryControls,
+    ExplorePanel,
+    ControlPanel,
   },
   props: {
     bodies: {
