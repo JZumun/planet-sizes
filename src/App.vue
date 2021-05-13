@@ -55,7 +55,6 @@ function retrieveFromQueryParameters() {
   return [];
 }
 
-const BASE_TITLE = "The Size of Planets";
 export default defineComponent({
   name: "App",
   components: {
@@ -71,29 +70,6 @@ export default defineComponent({
     watchEffect(() => {
       updateQueryParameters(displayedBodies.value ?? []);
     });
-
-    useMeta(
-      computed(() => {
-        const bodies = displayedBodies.value.map((b) => b.name);
-        const title = bodies.length
-          ? `${BASE_TITLE} - ${list(bodies)}`
-          : BASE_TITLE;
-        const description = `Compare the sizes of celestial bodies in the solar system.`;
-        const image = "/planets.png";
-        return {
-          title,
-          description,
-          og: {
-            title,
-            description,
-            image,
-          },
-          twitter: {
-            card: "summary_large_image",
-          },
-        };
-      })
-    );
 
     const setGroup = (group: string) => {
       displayedBodies.value = getBodiesOfGroup(group);
