@@ -10,6 +10,7 @@
           class="celestial-body-item"
           v-for="body in bodies"
           v-bind:key="body.key"
+          :id="body.key"
           :body="body"
           :scale="scale"
           :showName="showNames"
@@ -82,6 +83,7 @@ export default defineComponent({
 
 <style scoped>
 .celestial-bodies-gallery {
+  scroll-behavior: smooth;
   position: relative;
   overflow: auto;
 }
