@@ -60,7 +60,6 @@ export default defineComponent({
       default: true,
     },
   },
-  emits: ["go"],
   setup(props) {
     const width = computed(
       () => `${(props.body.radius[0] * 2) / props.scale}px`

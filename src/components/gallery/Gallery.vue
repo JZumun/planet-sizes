@@ -21,7 +21,7 @@
     <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
   </section>
   <teleport to="#sidebar">
-    <explore-panel :bodies="bodies" />
+    <explore-panel :scene="scene" :bodies="bodies" />
     <control-panel
       v-model:zoom="zoom"
       v-model:showNames="showNames"
@@ -44,6 +44,9 @@ export default defineComponent({
     ControlPanel,
   },
   props: {
+    scene: {
+      type: String,
+    },
     bodies: {
       type: Array as PropType<Body[]>,
       required: true,

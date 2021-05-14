@@ -30,6 +30,7 @@ export const router = createRouter({
         }
 
         return {
+          scene,
           bodies: displayedBodies,
         };
       },

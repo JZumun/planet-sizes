@@ -33,9 +33,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, Ref, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { Body, bodies, presets } from "../../data/data";
-import { queryValueOrFirst } from "../../routes";
 import DataSearch from "../form/DataSearch.vue";
 import SidebarPanel from "../sidebar/SidebarPanel.vue";
 
@@ -45,6 +44,9 @@ export default defineComponent({
     SidebarPanel,
   },
   props: {
+    scene: {
+      type: String,
+    },
     bodies: {
       type: Array as PropType<Body[]>,
       required: true,
@@ -52,10 +54,9 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
-    const route = useRoute();
 
     const preset = computed({
-      get: () => queryValueOrFirst(route.query.g) ?? "",
+      get: () => props.scene ?? "",
       set: (val) => router.replace(`/?g=${val}`),
     });
 
