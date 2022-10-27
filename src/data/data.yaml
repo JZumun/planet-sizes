@@ -53,10 +53,16 @@ scenes:
     name: Dwarf Planets
     includes:
       - ceres
+      - orcus
       - pluto
+      - charon
+      - salacia
       - haumea
+      - quaoar
       - makemake
+      - gonggong
       - eris
+      - sedna
   inner-planets:
     name: Inner Planets
     includes:
@@ -452,3 +458,28 @@ bodies:
     radius:
       - 17.2
       - 5.6
+
+  #dwarf planet candidates
+  orcus:
+    name: Orcus
+    radius:
+      - 455
+      - 458.5
+  salacia:
+    name: Salacia
+    radius:
+      - 423
+      - 427
+  quaoar:
+    name: Quaoar
+    radius:
+      - 569
+      - 518
+  gonggong:
+    name: Gonggong
+    radius:
+      - 615
+  sedna:
+    name: Sedna
+    radius:
+      - 497.5
