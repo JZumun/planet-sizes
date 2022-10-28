@@ -388,6 +388,9 @@ bodies:
       - 1050
       - 537
     tilt: 28
+    rings:
+      radius: 2_287
+      color: "#444"
 
   makemake:
     name: Makemake
