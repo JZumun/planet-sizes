@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory, LocationQueryValue } from "vue-router";
-import { getBodiesOfGroup, scenes, bodies, Body } from "./data/data";
+import { bodies, Body, getBodiesOfGroup, Scene, scenes } from "./data/data";
 
-export const queryValueOrFirst = (item: LocationQueryValue | LocationQueryValue[]) =>
-  Array.isArray(item) ? item[0] : item;
+export const queryValueOrFirst = (
+  item: LocationQueryValue | LocationQueryValue[],
+) => Array.isArray(item) ? item[0] : item;
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -13,8 +14,10 @@ export const router = createRouter({
       component: () => import("./components/gallery/Gallery.vue"),
       props(route) {
         let displayedBodies: Body[] = [];
+        let actualScene: Scene | undefined = undefined;
         const scene = queryValueOrFirst(route.query.g);
         if (scene && scene in scenes) {
+          actualScene = scenes[scene];
           displayedBodies = getBodiesOfGroup(scene);
         }
         const bodyValues = queryValueOrFirst(route.query.i);
@@ -23,14 +26,14 @@ export const router = createRouter({
             bodyValues
               .split(" ")
               .map((k) => bodies[k])
-              .filter((b) => b && !displayedBodies.some((d) => d.key == b.key))
+              .filter((b) => b && !displayedBodies.some((d) => d.key == b.key)),
           );
         } else if (!scene && bodyValues == null) {
           displayedBodies = [bodies.earth];
         }
 
         return {
-          scene,
+          scene: actualScene,
           bodies: displayedBodies,
         };
       },

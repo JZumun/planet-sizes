@@ -20,6 +20,7 @@ groups:
       - neptune-system
       - pluto-system
       - eris-system
+      - haumea-system
 scenes:
   solar-system:
     name: Solar System
@@ -108,12 +109,25 @@ scenes:
     includes:
       - earth
       - moon
+    system:
+      main: earth
+      satellites:
+        moon:
+          inclination: 5.145
+          distance: 384_399
   mars-system:
     name: Mars · Moons
     includes:
       - mars
       - phobos
       - deimos
+    system:
+      main: mars
+      satellites:
+        phobos:
+          distance: 9_377
+        deimos:
+          distance: 23_460
   major-asteroids:
     name: Largest Asteroids
     includes:
@@ -129,6 +143,17 @@ scenes:
       - europa
       - ganymede
       - callisto
+    system:
+      main: jupiter
+      satellites:
+        io:
+          distance: 421_800
+        europa:
+          distance: 671_100
+        ganymede:
+          distance: 1_070_400
+        callisto:
+          distance: 1_882_700
   saturn-system:
     name: Saturn · Major Moons
     includes:
@@ -141,6 +166,34 @@ scenes:
       - titan
       - iapetus
       - phoebe
+    system:
+      main: saturn
+      suggested_scale: 1_200_000
+      satellites:
+        mimas:
+          distance: 185_539
+          inclination: 1.566
+        enceladus:
+          distance: 237_948
+          inclination: 0.010
+        tethys:
+          distance: 294_619
+          inclination: 0.168
+        dione:
+          distance: 377_396
+          inclination: 0.002
+        rhea:
+          distance: 527_108
+          inclination: 0.327
+        titan:
+          distance: 1_221_870
+          inclination: 0.349
+        iapetus:
+          distance: 3_560_820
+          inclination: 15.47
+        phoebe:
+          distance: 12_929_400
+          inclination: 175.2
   uranus-system:
     name: Uranus · Major Moons
     includes:
@@ -150,6 +203,25 @@ scenes:
       - umbriel
       - titania
       - oberon
+    system:
+      main: uranus
+      satellites:
+        miranda:
+          distance: 129_390
+          inclination: 4.232
+        ariel:
+          distance: 191_020
+          inclination: 0.260
+        umbriel:
+          distance: 266_300
+          inclination: 0.205
+        titania:
+          distance: 435_910
+          inclination: 0.340
+        oberon:
+          distance: 583_520
+          inclination: 0.058
+
   neptune-system:
     name: Neptune · Major Moons
     includes:
@@ -157,6 +229,19 @@ scenes:
       - proteus
       - triton
       - nereid
+    system:
+      main: neptune
+      suggested_scale: 350_000
+      satellites:
+        proteus:
+          distance: 117_646
+          inclination: 0.075
+        triton:
+          distance: 354_759
+          inclination: 156.865
+        nereid:
+          distance: 5_504_000
+          inclination: 5.800
   pluto-system:
     name: Pluto · Moons
     includes:
@@ -166,11 +251,42 @@ scenes:
       - nix
       - kerberos
       - hydra
+    system:
+      main: pluto
+      satellites:
+        charon:
+          distance: 17_536
+        styx:
+          distance: 42_656
+        nix:
+          distance: 48_694
+        kerberos:
+          distance: 57_783
+        hydra:
+          distance: 64_738
   eris-system:
     name: Eris · Dysnomia
     includes:
       - eris
       - dysnomia
+    system:
+      main: eris
+      satellites:
+        dysnomia:
+          distance: 37_273
+  haumea-system:
+    name: Haumea · Moons
+    includes:
+      - haumea
+      - hiiaka
+      - namaka
+    system:
+      main: haumea
+      satellites:
+        namaka:
+          distance: 25_657
+        hiiaka:
+          distance: 49_880
 bodies:
   sun:
     name: The Sun
@@ -458,6 +574,16 @@ bodies:
     radius:
       - 17.2
       - 5.6
+
+  #haumea satellites
+  hiiaka:
+    name: Hi'iaka
+    radius:
+      - 310
+  namaka:
+    name: Namaka
+    radius:
+      - 170
 
   #dwarf planet candidates
   orcus:

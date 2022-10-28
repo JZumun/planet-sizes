@@ -16,6 +16,14 @@ export interface Scene {
   key: string;
   name: string;
   includes: string[];
+  system?: {
+    main: string;
+    suggested_scale: number;
+    satellites: Record<string, {
+      inclination: number;
+      distance: number;
+    }>;
+  };
 }
 
 export interface Group {
@@ -42,8 +50,10 @@ export const getGroupsOfBody = (body: string): Scene[] =>
     .filter((g) => g.includes.includes(body))
     .reverse();
 
-function fillKeys<T>(obj: Record<string, T>): Record<string, T & { key: string }> {
+function fillKeys<T>(
+  obj: Record<string, T>,
+): Record<string, T & { key: string }> {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, item]) => [key, { key, ...item }])
+    Object.entries(obj).map(([key, item]) => [key, { key, ...item }]),
   );
 }

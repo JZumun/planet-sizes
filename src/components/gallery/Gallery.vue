@@ -2,83 +2,92 @@
   <section class="celestial-bodies-gallery" v-bind="$attrs">
     <div class="scale-container">
       <div class="scale">{{ Intl.NumberFormat().format(scale * 100) }} km</div>
-      <p class="scale-disclaimer">Distances between objects not drawn to scale</p>
+      <p class="scale-disclaimer" v-if="!showScene">Distances between objects not drawn to scale</p>
     </div>
-    <section class="celestial-bodies" v-if="bodies.length > 0">
-      <transition-group name="fade">
-        <celestial-body
-          class="celestial-body-item"
-          v-for="body in bodies"
-          v-bind:key="body.key"
-          :id="body.key"
-          :body="body"
-          :scale="scale"
-          :showName="showNames"
-          :showDiameter="showDiameters"
-          :showGroups="bodies.length == 1"
-        />
-      </transition-group>
-    </section>
-    <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
+    <celestial-scene v-if="showScene" :scene="scene!.system!" :scale="scale" :showName="showNames"
+      :showDiameter="showDiameters" />
+    <template v-else>
+      <section class="celestial-bodies" v-if="bodies.length > 0">
+        <transition-group name="fade">
+          <celestial-body class="celestial-body-item" v-for="body in bodies" v-bind:key="body.key" :id="body.key"
+            :body="body" :scale="scale" :showName="showNames" :showDiameter="showDiameters"
+            :showGroups="bodies.length == 1" />
+        </transition-group>
+      </section>
+      <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
+    </template>
+
   </section>
   <teleport to="#sidebar">
-    <explore-panel :scene="scene" :bodies="bodies" />
-    <control-panel
-      v-model:zoom="zoom"
-      v-model:showNames="showNames"
-      v-model:show-diameters="showDiameters"
-    />
+    <explore-panel :scene="scene?.key" :bodies="bodies" />
+    <sidebar-panel name="View Controls">
+      <label for="zoom">Zoom</label>
+      <log-slider class="field" id="zoom" v-model="zoom" :min="1 / 10" :max="10" />
+
+      <label for="show-names">Show Names</label>
+      <input type="checkbox" name="show-names" id="show-names" v-model="showNames" />
+
+      <label for="show-diameters">Show Diameters</label>
+      <input type="checkbox" name="show-diameters" id="show-diameters" v-model="showDiameters" />
+
+      <template v-if="supportsAccurateDistances">
+        <label for="show-accurate-distances">Show Accurate Distances <span class="tag">(experimental)</span></label>
+        <input type="checkbox" name="show-accurate-distances" id="show-accurate-distances"
+          v-model="showAccurateDistances" />
+      </template>
+
+    </sidebar-panel>
   </teleport>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, ref } from "vue";
-import { Body } from "../../data/data";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { Body, Scene } from "../../data/data";
 import CelestialBody from "./CelestialBody.vue";
 import ExplorePanel from "./ExplorePanel.vue";
-import ControlPanel from "./ControlPanel.vue";
+import SidebarPanel from "../sidebar/SidebarPanel.vue";
+import LogSlider from "../form/LogSlider.vue";
+import CelestialScene from "./Scene.vue";
 
-export default defineComponent({
-  components: {
-    CelestialBody,
-    ExplorePanel,
-    ControlPanel,
-  },
-  props: {
-    scene: {
-      type: String,
-    },
-    bodies: {
-      type: Array as PropType<Body[]>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const zoom = ref(1);
-    const showNames = ref(true);
-    const showDiameters = ref(true);
+const props = defineProps<{
+  scene?: Scene;
+  bodies: Body[]
+}>();
 
-    const initialScale = computed(() => {
-      const largestBodyRadius = props.bodies.reduce(
-        (max, body) => Math.max(max, body.radius[0]),
-        0
-      );
 
-      return Math.max(1, largestBodyRadius / 100);
-    });
+const zoom = ref(1);
+const showNames = ref(true);
+const showDiameters = ref(true);
+const showAccurateDistances = ref(true);
 
-    const scale = computed(() =>
-      Math.max(1, Math.floor((initialScale.value / zoom.value) * 10) / 10)
-    );
+const supportsAccurateDistances = computed(() => {
+  return props.scene?.system != undefined;
+})
+const showScene = computed(() => {
+  return supportsAccurateDistances.value && showAccurateDistances.value;
+})
 
-    return {
-      zoom,
-      showNames,
-      showDiameters,
-      scale,
-    };
-  },
+const initialScale = computed(() => {
+  if (showScene.value) {
+    if (props.scene!.system!.suggested_scale) {
+      return props.scene!.system!.suggested_scale / 8 / 100;
+    }
+    const largestDistance = Object.values(props.scene!.system!.satellites)
+      .reduce((max, body) => Math.max(max, body.distance), 0)
+    return largestDistance / 8 / 100;
+  }
+
+  const largestBodyRadius = props.bodies.reduce(
+    (max, body) => Math.max(max, body.radius[0]),
+    0
+  );
+
+  return Math.max(1, largestBodyRadius / 100);
 });
+
+const scale = computed(() =>
+  Math.max(1, Math.floor((initialScale.value / zoom.value) * 10) / 10)
+);
 </script>
 
 <style scoped>
@@ -107,6 +116,12 @@ export default defineComponent({
   padding: 5em;
   position: relative;
   z-index: 2;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.5em;
+  opacity: 0.5;
 }
 
 .scale-container {
@@ -139,6 +154,7 @@ export default defineComponent({
   position: relative;
   z-index: 1;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
