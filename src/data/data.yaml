@@ -21,6 +21,12 @@ groups:
       - pluto-system
       - eris-system
       - haumea-system
+  extra-solar-systems:
+    name: Extra-Solar Bodies
+    includes:
+      - alpha_centauri
+      - polaris
+      - stars
 scenes:
   solar-system:
     name: Solar System
@@ -290,6 +296,49 @@ scenes:
         hiiaka:
           distance: 49_880
           inclination: 126.356
+  alpha_centauri:
+    name: Alpha Centauri
+    includes:
+      - alpha_centauri_a
+      - alpha_centauri_b
+      - proxima_centauri
+      - sun
+    system:
+      main: alpha_centauri_a
+      suggested_scale: 3_000_000_000
+      satellites:
+        alpha_centauri_b:
+          distance: 3_000_000_000
+        proxima_centauri:
+          distance: 1_942_500_000_000
+        sun:
+          distance: 40_175_000_000_000
+  polaris:
+    name: Polaris
+    includes:
+      - polaris_aa
+      - polaris_ab
+      - polaris_b
+    system:
+      main: polaris_aa
+      suggested_scale: 3_000_000_000
+      satellites:
+        polaris_ab:
+          # 18.5 AU
+          distance: 2_767_600_000
+        polaris_b:
+          # 2.4k AU
+          distance: 359_040_000_000
+  stars:
+    name: A Handful of Stars
+    includes:
+      - sun
+      - alpha_centauri_a # 5ly
+      - sirius # 8ly
+      - polaris_aa # 433ly
+      - betelgeuse # 642ly
+      - rigel # 864ly
+      - sagittarius_a_star # 26kly
 bodies:
   sun:
     name: The Sun
@@ -615,3 +664,90 @@ bodies:
     name: Sedna
     radius:
       - 497.5
+  
+  #notable objects
+  oumuamua:
+    name: ʻOumuamua
+    radius:
+      - 115
+      - 17.5
+      - 17.5
+    tilt: 122.74
+  
+  #stars
+  # r_sol = 700_000
+  betelgeuse:
+    name: Betelgeuse
+    color: "#ff3838"
+    radius:
+      # 640 * R_sol
+      - 448_000_000
+      - 448_000_000
+  rigel:
+    name: Rigel
+    color: "#a3c3ff"
+    radius:
+      # 74 * R_sol
+      - 51_800_800
+      - 51_800_000
+  sirius:
+    name: Sirius
+    color: "#e1e0ff"
+    radius:
+      # 1.7 * R_sol
+      - 1_200_000
+      - 1_200_000
+
+  polaris_aa:
+    name: Polaris Aa
+    color: "#ffba35"
+    radius:
+      # 46 * R_sol
+      - 32_000_000
+      - 32_000_000
+  polaris_ab:
+    name: Polaris Ab
+    color: "#f4c468"
+    radius:
+      # 1.04 * R_sol
+      - 728_000
+      - 728_000
+  polaris_b:
+    name: Polaris B
+    color: "#f4c468"
+    radius:
+      # 1.38 * R_sol
+      - 960_000
+      - 960_000
+
+  alpha_centauri_a:
+    name: Alpha Centauri A
+    color: "#f4c468"
+    radius:
+      # 1.22 * R_sol
+      - 850_000
+      - 850_000
+  alpha_centauri_b:
+    name: Alpha Centauri B
+    color: "#ddba76"
+    radius:
+      # 0.86 * R_sol
+      - 600_000
+      - 600_000
+  proxima_centauri:
+    name: Proxima Centauri
+    color: "#f77745"
+    radius:
+      # 0.1542 * R_sol
+      - 108_000
+      - 108_000
+  
+  sagittarius_a_star:
+    name: Sagittarius A*
+    color: "black"
+    radius:
+      - 11_750_000
+      - 11_750_000
+  
+
+  
