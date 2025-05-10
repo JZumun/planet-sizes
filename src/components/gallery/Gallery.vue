@@ -179,6 +179,7 @@ function handleWheel(e: WheelEvent) {
 }
 
 .celestial-bodies {
+  width: min-content;
   height: 100%;
   display: flex;
   align-items: center;
@@ -223,6 +224,7 @@ function handleWheel(e: WheelEvent) {
 }
 
 .accurate-distance {
+  width: initial;
   gap: 0;
 }
 .accurate-distance .celestial-body-container {

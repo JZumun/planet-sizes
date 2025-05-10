@@ -29,7 +29,7 @@ export const router = createRouter({
               .filter((b) => b && !displayedBodies.some((d) => d.key == b.key)),
           );
         } else if (!scene && bodyValues == null) {
-          displayedBodies = [bodies.earth];
+          displayedBodies = [bodies.earth, randomBody()]
         }
 
         return {
@@ -40,3 +40,15 @@ export const router = createRouter({
     },
   ],
 });
+
+function randomBody() {
+  const list = Object.values(bodies);
+  const index = Math.floor(Math.random() * list.length);
+  const body = list[index];
+
+  if (body.key != "earth") {
+    return body;
+  } else {
+    return randomBody();
+  }
+}
