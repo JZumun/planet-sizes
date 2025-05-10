@@ -303,5 +303,10 @@ function handleWheel(e: WheelEvent) {
     left: 0;
     /* height: 0; */
   }
+
+  .distance-list {
+    margin-top: 1em;
+    margin-bottom: -2em;
+  }
 }
 </style>
