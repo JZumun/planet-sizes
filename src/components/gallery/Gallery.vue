@@ -1,5 +1,5 @@
 <template>
-  <section class="celestial-bodies-gallery" v-bind="$attrs" ref="main" @wheel="scroll">
+  <section class="celestial-bodies-gallery" v-bind="$attrs" ref="main" @wheel.prevent="handleWheel">
     <div class="scale-container">
       <div class="scale">{{ Intl.NumberFormat().format(scale * 100) }} km</div>
       <p class="scale-disclaimer" v-if="!showDistance">Distances between objects not drawn to scale</p>
@@ -101,7 +101,10 @@ const scale = computed(() => Math.max(1, Math.floor((initialScale.value / zoom.v
 const display = computed(() => {
   // simple list of bodies
   if (!showDistance.value) {
-    return props.bodies.map((b) => ({ body: b, distance: b.radius[0] }));
+    return props.bodies.map((b, i) => ({
+      body: b,
+      distance: (b.radius[0] + (props.bodies[i - 1]?.radius?.[0] ?? 0)) / scale.value,
+    }));
   }
 
   // system with accurate dustances
@@ -125,13 +128,21 @@ const display = computed(() => {
   ];
 });
 
-// HORIZONTAL SCROLL
+// WHEEL BEHAVIOR
 const galleryRef = useTemplateRef("main");
-function scroll(e: WheelEvent) {
+function handleWheel(e: WheelEvent) {
   const item = galleryRef.value;
   if (item == null) return;
-  if (e.deltaY > 0) item.scrollLeft! += 200;
-  else item.scrollLeft -= 200;
+
+  if (e.ctrlKey) {
+    // ZOOM
+    if (e.deltaY > 0) zoom.value = Math.min(10, zoom.value * 1.5);
+    else zoom.value = Math.max(1 / 10, zoom.value / 1.5);
+  } else {
+    // SCROLL
+    if (e.deltaY > 0) item.scrollLeft! += 200;
+    else item.scrollLeft -= 200;
+  }
 }
 </script>
 
@@ -140,6 +151,11 @@ function scroll(e: WheelEvent) {
   scroll-behavior: smooth;
   position: relative;
   overflow: auto;
+
+  background-size: 100px 100px;
+  --grid-line-color: #151515;
+  background-image: linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
 }
 
 .empty-message {
@@ -199,10 +215,13 @@ function scroll(e: WheelEvent) {
   margin-left: calc(var(--distance) * 1px);
 }
 .celestial-body-container {
-  transition: all 1s;
+  will-change: width, margin-left, opacity, transform, height;
+  transition: width 1s, margin-left 1s, opacity 1s, transform 1s, height 1s;
   position: relative;
   z-index: 1;
   margin-left: 0;
+  width: calc-size(auto, size);
+  width: auto;
 }
 
 .fade-enter-from,

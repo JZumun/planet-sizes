@@ -168,7 +168,7 @@ scenes:
       - phoebe
     system:
       main: saturn
-      suggested_scale: 1_200_000
+      suggested_scale: 750_000
       satellites:
         mimas:
           distance: 185_539

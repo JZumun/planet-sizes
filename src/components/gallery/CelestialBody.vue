@@ -7,11 +7,11 @@
     <div class="labels">
       <p v-if="showName" class="name">{{ body.name }}</p>
       <p v-if="showDiameter" class="size">{{ friendlyDiameter }}</p>
-      <div class="groups" :class="{visible: showGroups}">
+      <div class="groups" :class="{ visible: showGroups }">
         <span>Links</span>
         <ul class="group-list">
           <li v-for="group in groups" :key="group.key">
-            <router-link :to="`?g=${group.key}`" replace>{{group.name}}</router-link>
+            <router-link :to="`?g=${group.key}`" replace>{{ group.name }}</router-link>
           </li>
         </ul>
       </div>
@@ -61,28 +61,17 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const width = computed(
-      () => `${(props.body.radius[0] * 2) / props.scale}px`
-    );
+    const width = computed(() => `${(props.body.radius[0] * 2) / props.scale}px`);
     const height = computed(() =>
-      props.body.radius[1]
-        ? `${(props.body.radius[1] * 2) / props.scale}px`
-        : width.value
+      props.body.radius[1] ? `${(props.body.radius[1] * 2) / props.scale}px` : width.value
     );
 
     const tilt = computed(() => `${props.body.tilt ?? 0}deg`);
-    const color = computed(
-      () => props.body.color ?? generateRandomGray(props.body.key)
-    );
+    const color = computed(() => props.body.color ?? generateRandomGray(props.body.key));
 
-    const friendlyDiameter = computed(
-      () =>
-        `${Intl.NumberFormat().format(Math.floor(props.body.radius[0] * 2))} km`
-    );
+    const friendlyDiameter = computed(() => `${Intl.NumberFormat().format(Math.floor(props.body.radius[0] * 2))} km`);
 
-    const ringWidth = computed(
-      () => `${((props.body.rings?.radius ?? 0) * 2) / props.scale}px`
-    );
+    const ringWidth = computed(() => `${((props.body.rings?.radius ?? 0) * 2) / props.scale}px`);
     const ringColor = computed(() => props.body.rings?.color ?? "transparent");
 
     const groups = computed(() => getGroupsOfBody(props.body.key));
@@ -117,6 +106,7 @@ export default defineComponent({
   justify-items: center;
   grid-template-areas: "figure";
   transform: rotate(v-bind(tilt));
+  transition: transform 1s;
 }
 .body {
   grid-area: figure;
