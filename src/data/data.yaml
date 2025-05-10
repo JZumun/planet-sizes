@@ -285,8 +285,10 @@ scenes:
       satellites:
         namaka:
           distance: 25_657
+          inclination: 113.013
         hiiaka:
           distance: 49_880
+          inclination: 126.356
 bodies:
   sun:
     name: The Sun
