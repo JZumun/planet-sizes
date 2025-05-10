@@ -170,4 +170,16 @@ const scale = computed(() =>
   position: absolute;
   z-index: -1;
 }
+
+@media all and (max-width: 60em) {
+  .celestial-bodies {
+    height: initial;
+  }
+  .scale-container {
+    position: sticky;
+    top: 0;
+    left: 0;
+    /* height: 0; */
+  }
+}
 </style>

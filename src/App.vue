@@ -140,21 +140,14 @@ button {
   #app {
     grid-template-columns: 1fr;
     grid-template-areas: "gallery" "controls";
-    max-height: initial;
-    height: auto;
+    max-height: unset;
+    height: unset;
+    overflow: initial;
   }
   #sidebar {
     width: 100%;
     height: auto;
     overflow: initial;
-  }
-  #main {
-    min-height: calc(100vh - 5em);
-  }
-  .scale-container {
-    position: sticky !important;
-    top: 0;
-    bottom: unset !important;
   }
 }
 </style>
