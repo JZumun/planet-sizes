@@ -2,23 +2,19 @@
   <section class="celestial-bodies-gallery" v-bind="$attrs" ref="main" @wheel="scroll">
     <div class="scale-container">
       <div class="scale">{{ Intl.NumberFormat().format(scale * 100) }} km</div>
-      <p class="scale-disclaimer" v-if="!showScene">Distances between objects not drawn to scale</p>
+      <p class="scale-disclaimer" v-if="!showDistance">Distances between objects not drawn to scale</p>
     </div>
-    <celestial-scene
-      class="celestial-bodies"
-      v-if="showScene"
-      :scene="scene!.system!"
-      :scale="scale"
-      :showName="showNames"
-      :showDiameter="showDiameters"
-    />
-    <template v-else>
-      <section class="celestial-bodies" v-if="bodies.length > 0">
-        <transition-group name="fade">
+
+    <section class="celestial-bodies" :class="{ 'accurate-distance': showDistance }" v-if="display.length > 0">
+      <transition-group name="fade">
+        <div
+          class="celestial-body-container"
+          v-for="{ body, distance } in display"
+          v-bind:key="body.key"
+          :style="`--distance: ${distance}`"
+        >
           <celestial-body
             class="celestial-body-item"
-            v-for="body in bodies"
-            v-bind:key="body.key"
             :id="body.key"
             :body="body"
             :scale="scale"
@@ -26,10 +22,10 @@
             :showDiameter="showDiameters"
             :showGroups="bodies.length == 1"
           />
-        </transition-group>
-      </section>
-      <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
-    </template>
+        </div>
+      </transition-group>
+    </section>
+    <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
   </section>
   <teleport to="#sidebar">
     <explore-panel :scene="scene?.key" :bodies="bodies" />
@@ -58,12 +54,11 @@
 
 <script setup lang="ts">
 import { computed, ref, useTemplateRef } from "vue";
-import { Body, Scene } from "../../data/data";
+import { Body, Scene, bodies as bodyMap } from "../../data/data";
 import CelestialBody from "./CelestialBody.vue";
 import ExplorePanel from "./ExplorePanel.vue";
 import SidebarPanel from "../sidebar/SidebarPanel.vue";
 import LogSlider from "../form/LogSlider.vue";
-import CelestialScene from "./Scene.vue";
 
 const props = defineProps<{
   scene?: Scene;
@@ -78,20 +73,21 @@ const showAccurateDistances = ref(true);
 const supportsAccurateDistances = computed(() => {
   return props.scene?.system != undefined;
 });
-const showScene = computed(() => {
+const showDistance = computed(() => {
   return supportsAccurateDistances.value && showAccurateDistances.value;
 });
 
+// SCALE
 const initialScale = computed(() => {
-  if (showScene.value) {
+  if (showDistance.value) {
     if (props.scene!.system!.suggested_scale) {
-      return props.scene!.system!.suggested_scale / 8 / 100;
+      return props.scene!.system!.suggested_scale / 7 / 100;
     }
     const largestDistance = Object.values(props.scene!.system!.satellites).reduce(
       (max, body) => Math.max(max, body.distance),
       0
     );
-    return largestDistance / 8 / 100;
+    return largestDistance / 7 / 100;
   }
 
   const largestBodyRadius = props.bodies.reduce((max, body) => Math.max(max, body.radius[0]), 0);
@@ -101,12 +97,41 @@ const initialScale = computed(() => {
 
 const scale = computed(() => Math.max(1, Math.floor((initialScale.value / zoom.value) * 10) / 10));
 
+// BODIES ON DISPLAY
+const display = computed(() => {
+  // simple list of bodies
+  if (!showDistance.value) {
+    return props.bodies.map((b) => ({ body: b, distance: b.radius[0] }));
+  }
+
+  // system with accurate dustances
+  const system = props.scene!.system!;
+  const main = bodyMap[system.main];
+
+  let previousDistance = 0;
+  return [
+    {
+      body: { ...main, tilt: 0 },
+      distance: main.radius[0] / scale.value,
+    },
+    ...Object.entries(system.satellites).map(([key, info]) => {
+      const distance = info.distance - previousDistance;
+      previousDistance = info.distance;
+      return {
+        body: bodyMap[key],
+        distance: distance / scale.value,
+      };
+    }),
+  ];
+});
+
+// HORIZONTAL SCROLL
 const galleryRef = useTemplateRef("main");
 function scroll(e: WheelEvent) {
   const item = galleryRef.value;
   if (item == null) return;
-  if (e.deltaY > 0) item.scrollLeft! += 100;
-  else item.scrollLeft -= 100;
+  if (e.deltaY > 0) item.scrollLeft! += 200;
+  else item.scrollLeft -= 200;
 }
 </script>
 
@@ -169,10 +194,15 @@ function scroll(e: WheelEvent) {
   font-size: 0.75em;
 }
 
-.celestial-body-item {
+.accurate-distance .celestial-body-container {
+  width: 0;
+  margin-left: calc(var(--distance) * 1px);
+}
+.celestial-body-container {
   transition: all 1s;
   position: relative;
   z-index: 1;
+  margin-left: 0;
 }
 
 .fade-enter-from,
@@ -181,6 +211,7 @@ function scroll(e: WheelEvent) {
   transform: translateY(30px);
 }
 
+.fade-enter-form :deep(.body),
 .fade-leave-to :deep(.body) {
   height: 0;
   width: 0;
