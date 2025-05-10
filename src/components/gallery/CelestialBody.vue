@@ -184,6 +184,7 @@ p {
 }
 
 .groups {
+  height: 10em;
   opacity: 0;
   margin-left: -1em;
   margin-right: -1em;
