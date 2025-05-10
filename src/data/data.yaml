@@ -253,6 +253,7 @@ scenes:
       - hydra
     system:
       main: pluto
+      suggested_scale: 20_000
       satellites:
         charon:
           distance: 17_536

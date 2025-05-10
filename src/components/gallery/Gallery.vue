@@ -1,10 +1,21 @@
 <template>
   <section class="celestial-bodies-gallery" v-bind="$attrs" ref="main" @wheel.prevent="handleWheel">
     <div class="scale-container">
-      <div class="scale">{{ Intl.NumberFormat().format(scale * 100) }} km</div>
+      <div class="scale">{{ fmtDistance(scale * 100) }} km</div>
       <p class="scale-disclaimer" v-if="!showDistance">Distances between objects not drawn to scale</p>
     </div>
 
+    <transition name="fade">
+      <ul v-if="showDistance" class="distance-list" :style="`--margin: ${initialMargin}`">
+        <li
+          v-for="({ distance }, moon) in scene?.system?.satellites"
+          :key="moon"
+          :style="`--distance: ${distance / scale}; --color: ${bodyMap[moon].color}`"
+        >
+          <span>{{ bodyMap[moon].name }} ({{ fmtDistance(distance) }} km)</span>
+        </li>
+      </ul>
+    </transition>
     <section class="celestial-bodies" :class="{ 'accurate-distance': showDistance }" v-if="display.length > 0">
       <transition-group name="fade">
         <div
@@ -96,8 +107,10 @@ const initialScale = computed(() => {
 });
 
 const scale = computed(() => Math.max(1, Math.floor((initialScale.value / zoom.value) * 10) / 10));
+const fmtDistance = Intl.NumberFormat().format;
 
 // BODIES ON DISPLAY
+const initialMargin = computed(() => props.bodies[0].radius[0] / scale.value);
 const display = computed(() => {
   // simple list of bodies
   if (!showDistance.value) {
@@ -115,7 +128,7 @@ const display = computed(() => {
   return [
     {
       body: { ...main, tilt: 0 },
-      distance: main.radius[0] / scale.value,
+      distance: initialMargin.value,
     },
     ...Object.entries(system.satellites).map(([key, info]) => {
       const distance = info.distance - previousDistance;
@@ -167,14 +180,13 @@ function handleWheel(e: WheelEvent) {
 
 .celestial-bodies {
   height: 100%;
-  width: min-content;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 1em;
   flex: 1;
   margin: auto;
-  padding: 5em;
+  padding: 100px;
   position: relative;
   z-index: 2;
 }
@@ -210,6 +222,9 @@ function handleWheel(e: WheelEvent) {
   font-size: 0.75em;
 }
 
+.accurate-distance {
+  gap: 0;
+}
 .accurate-distance .celestial-body-container {
   width: 0;
   margin-left: calc(var(--distance) * 1px);
@@ -224,13 +239,50 @@ function handleWheel(e: WheelEvent) {
   width: auto;
 }
 
+.distance-list {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.75em;
+  padding: 0;
+  padding-left: 100px;
+  margin-left: calc(var(--margin) * 1px);
+  margin-top: 100px;
+  margin-bottom: -100px;
+  transition: opacity 1s, transform 1s, margin 1s, height 1s;
+
+  li {
+    list-style-type: none;
+    opacity: 0.5;
+    font-size: 0.8em;
+    position: relative;
+    width: fit-content;
+
+    span {
+      opacity: 0.75;
+      position: sticky;
+      left: 100px;
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      width: calc(var(--distance) * 1px);
+      height: 5px;
+      border: 1px solid;
+      border-bottom: 0px;
+      border-color: var(--color);
+      transition: width 1s;
+    }
+  }
+}
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
 
-.fade-enter-form :deep(.body),
+.fade-enter-from :deep(.body),
 .fade-leave-to :deep(.body) {
   height: 0;
   width: 0;
