@@ -29,6 +29,7 @@ body {
   /* background: #0c1019; */
   background: #111;
   color: #ddd;
+  accent-color: #222;
 
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -152,6 +153,7 @@ button {
     width: 100%;
     height: auto;
     overflow: initial;
+    z-index: 1;
   }
 }
 </style>
