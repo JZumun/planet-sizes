@@ -9,10 +9,8 @@
     </select>
 
     <label for="bodies">Add:</label>
-    <div class="field buttons">
-      <data-search id="bodies" placeholder="Look up..." v-model="searchInput" :data="bodyData" />
-      <button @click.prevent="addRandom()">+ Random</button>
-    </div>
+    <data-search class="field" id="bodies" placeholder="Look up..." v-model="searchInput" :data="bodyData" />
+    <button class="field" @click.prevent="addRandom()">+ Random</button>
 
     <div class="field">
       <div class="body-tag" v-for="body in selected" :key="body.key">
@@ -127,11 +125,5 @@ export default defineComponent({
 .body-tag > .remove {
   background: none;
   padding: 0;
-}
-
-.field.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.25em;
 }
 </style>
