@@ -342,6 +342,7 @@ scenes:
 bodies:
   sun:
     name: The Sun
+    description: Our home star. Small in the grand scheme of things.
     color: "#ffe769"
     radius:
       - 695_700
@@ -350,6 +351,7 @@ bodies:
 
   mercury:
     name: Mercury
+    description: The closest planet to the sun.
     color: "#ad7c59"
     radius:
       - 2439.7
@@ -357,6 +359,7 @@ bodies:
     tilt: 0.03
   venus:
     name: Venus
+    description: Earth's hot twin.
     color: "#be6794"
     radius:
       - 6051.8
@@ -364,6 +367,7 @@ bodies:
     tilt: 177.36
   earth:
     name: Earth
+    description: A pretty nice place.
     color: "#397abe"
     background:
       - "#397abe"
@@ -374,12 +378,14 @@ bodies:
     tilt: 23.439
   mars:
     name: Mars
+    description: The red planet. Land of robots.
     radius:
       - 3396.2
       - 3376.2
     tilt: 25.19
     color: "#bc4848"
   ceres:
+    description: Largest asteroid. Once considered a planet, but eventually demoted (like Pluto).
     name: Ceres
     radius:
       - 482.2

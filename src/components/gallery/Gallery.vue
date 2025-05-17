@@ -1,22 +1,25 @@
 <template>
-  <section class="celestial-bodies-gallery" v-bind="$attrs" ref="main" @wheel.prevent="handleWheel">
-    <div class="scale-container">
-      <div class="scale">{{ fmtDistance(scale * 100) }} km</div>
-      <p class="scale-disclaimer" v-if="!showDistance">Distances between objects not drawn to scale</p>
-    </div>
-
-    <transition name="fade">
-      <ul v-if="showDistance" class="distance-list" :style="`--margin: ${initialMargin}`">
+  <section
+    class="celestial-bodies-gallery"
+    :class="{ 'accurate-distance': showDistance }"
+    v-bind="$attrs"
+    ref="main"
+    @wheel.prevent="handleWheel"
+    :style="`--scale: ${scale};`"
+  >
+    <h2 class="title" v-html="title"></h2>
+    <ul class="distance-list" :style="`--margin: ${initialMargin};`">
+      <template v-if="showDistance">
         <li
           v-for="({ distance }, moon) in scene?.system?.satellites"
           :key="moon"
-          :style="`--distance: ${distance / scale}; --color: ${bodyMap[moon].color}`"
+          :style="`--distance: ${distance}; --color: ${bodyMap[moon].color}`"
         >
           <span>{{ bodyMap[moon].name }} ({{ fmtDistance(distance) }} km)</span>
         </li>
-      </ul>
-    </transition>
-    <section class="celestial-bodies" :class="{ 'accurate-distance': showDistance }" v-if="display.length > 0">
+      </template>
+    </ul>
+    <section class="celestial-bodies" ref="bodies" v-if="display.length > 0">
       <transition-group name="fade">
         <div
           class="celestial-body-container"
@@ -37,6 +40,10 @@
       </transition-group>
     </section>
     <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
+    <div class="scale-container">
+      <div class="scale">{{ fmtDistance(Math.round(50 * scale)) }} km</div>
+      <p class="scale-disclaimer" v-if="!showDistance">Distances between objects not drawn to scale</p>
+    </div>
   </section>
   <teleport to="#sidebar">
     <explore-panel :scene="scene?.key" :bodies="bodies" />
@@ -65,6 +72,7 @@
 
 <script setup lang="ts">
 import { computed, ref, useTemplateRef } from "vue";
+import { useElementSize, useWindowSize } from "@vueuse/core";
 import { Body, Scene, bodies as bodyMap } from "../../data/data";
 import CelestialBody from "./CelestialBody.vue";
 import ExplorePanel from "./ExplorePanel.vue";
@@ -88,35 +96,52 @@ const showDistance = computed(() => {
   return supportsAccurateDistances.value && showAccurateDistances.value;
 });
 
+const galleryRef = useTemplateRef("main");
+
+// TITLE
+const title = computed(() => props.scene?.name ?? "&nbsp;");
+
 // SCALE
-const initialScale = computed(() => {
+const { width: galleryWidth } = useElementSize(galleryRef);
+const { width: windowWidth } = useWindowSize();
+const padding = computed(() => (windowWidth.value > 60 * 16 ? 100 : 32));
+const galleryEffectiveWidth = computed(() => galleryWidth.value - padding.value * 2);
+const sceneSize = computed(() => {
   if (showDistance.value) {
-    if (props.scene!.system!.suggested_scale) {
-      return props.scene!.system!.suggested_scale / 7 / 100;
+    const system = props.scene!.system!;
+    if (system.suggested_scale) {
+      return system.suggested_scale + bodyMap[system.main].radius[0] * 2;
     }
-    const largestDistance = Object.values(props.scene!.system!.satellites).reduce(
-      (max, body) => Math.max(max, body.distance),
-      0
-    );
-    return largestDistance / 7 / 100;
+    const largestDistance =
+      Object.entries(system.satellites).reduce(
+        (max, [key, body]) => Math.max(max, body.distance + bodyMap[key].radius[0]),
+        0
+      ) + bodyMap[system.main].radius[0];
+    return largestDistance;
   }
 
   const largestBodyRadius = props.bodies.reduce((max, body) => Math.max(max, body.radius[0]), 0);
 
-  return Math.max(1, largestBodyRadius / 100);
+  return Math.max(1, largestBodyRadius * 2 * Math.min(props.bodies.length + 2, 5));
 });
 
-const scale = computed(() => Math.max(1, Math.floor((initialScale.value / zoom.value) * 10) / 10));
+const scale = computed(() => {
+  const s = Math.floor((sceneSize.value / zoom.value / galleryEffectiveWidth.value) * 10) / 10;
+  if (s === 0) {
+    return 100;
+  }
+  return s;
+});
 const fmtDistance = Intl.NumberFormat().format;
 
 // BODIES ON DISPLAY
-const initialMargin = computed(() => props.bodies[0].radius[0] / scale.value);
+const initialMargin = computed(() => props.bodies[0].radius[0]);
 const display = computed(() => {
   // simple list of bodies
   if (!showDistance.value) {
     return props.bodies.map((b, i) => ({
       body: b,
-      distance: (b.radius[0] + (props.bodies[i - 1]?.radius?.[0] ?? 0)) / scale.value,
+      distance: b.radius[0] + (props.bodies[i - 1]?.radius?.[0] ?? 0),
     }));
   }
 
@@ -135,14 +160,13 @@ const display = computed(() => {
       previousDistance = info.distance;
       return {
         body: bodyMap[key],
-        distance: distance / scale.value,
+        distance: distance,
       };
     }),
   ];
 });
 
 // WHEEL BEHAVIOR
-const galleryRef = useTemplateRef("main");
 function handleWheel(e: WheelEvent) {
   const item = galleryRef.value;
   if (item == null) return;
@@ -165,10 +189,23 @@ function handleWheel(e: WheelEvent) {
   position: relative;
   overflow: auto;
 
-  background-size: 100px 100px;
+  background-size: 50px 50px;
   --grid-line-color: #151515;
   background-image: linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
+  --gallery-padding: 100px;
+
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.title {
+  font-size: 1em;
+  margin: 2em var(--gallery-padding);
+  color: #999;
+  justify-self: start;
+  position: sticky;
+  left: var(--gallery-padding);
 }
 
 .empty-message {
@@ -180,14 +217,14 @@ function handleWheel(e: WheelEvent) {
 
 .celestial-bodies {
   width: min-content;
-  height: 100%;
+  max-width: calc(100% - 2 * var(--gallery-padding));
+  max-height: calc(100% - 5em);
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 1em;
   flex: 1;
   margin: auto;
-  padding: 100px;
   position: relative;
   z-index: 2;
 }
@@ -211,7 +248,7 @@ function handleWheel(e: WheelEvent) {
 .scale::before {
   content: "";
   display: inline-block;
-  width: 100px;
+  width: 50px;
   height: 5px;
   border: 1px solid white;
   border-top: 0;
@@ -223,13 +260,13 @@ function handleWheel(e: WheelEvent) {
   font-size: 0.75em;
 }
 
-.accurate-distance {
-  width: initial;
+.accurate-distance .celestial-bodies {
+  margin-left: var(--gallery-padding);
   gap: 0;
 }
 .accurate-distance .celestial-body-container {
   width: 0;
-  margin-left: calc(var(--distance) * 1px);
+  margin-left: calc(var(--distance) / var(--scale) * 1px);
 }
 .celestial-body-container {
   will-change: width, margin-left, opacity, transform, height;
@@ -237,8 +274,8 @@ function handleWheel(e: WheelEvent) {
   position: relative;
   z-index: 1;
   margin-left: 0;
-  width: calc-size(auto, size);
   width: auto;
+  width: calc-size(auto, size);
 }
 
 .distance-list {
@@ -246,10 +283,8 @@ function handleWheel(e: WheelEvent) {
   flex-direction: column-reverse;
   gap: 0.75em;
   padding: 0;
-  padding-left: 100px;
-  margin-left: calc(var(--margin) * 1px);
-  margin-top: 100px;
-  margin-bottom: -100px;
+  padding-left: var(--gallery-padding);
+  margin-left: calc(var(--margin) / var(--scale) * 1px);
   transition: opacity 1s, transform 1s, margin 1s, height 1s;
 
   li {
@@ -262,13 +297,13 @@ function handleWheel(e: WheelEvent) {
     span {
       opacity: 0.75;
       position: sticky;
-      left: 100px;
+      left: var(--gallery-padding);
     }
 
     &::after {
       content: "";
       display: block;
-      width: calc(var(--distance) * 1px);
+      width: calc(var(--distance) / var(--scale) * 1px);
       height: 5px;
       border: 1px solid;
       border-bottom: 0px;
@@ -291,26 +326,28 @@ function handleWheel(e: WheelEvent) {
 }
 
 .fade-leave-active {
+  opacity: 0;
   position: absolute;
   z-index: -1;
 }
 
 @media all and (max-width: 60em) {
-  .celestial-bodies {
-    height: initial;
-    padding-left: 20vw;
-    padding-right: 20vw;
+  .celestial-bodies-gallery {
+    --gallery-padding: 2em;
   }
-  .scale-container {
-    position: sticky;
-    top: 0;
-    left: 0;
-    /* height: 0; */
+  .celestial-bodies {
+    max-height: initial;
+    margin-top: 5em;
+    margin-bottom: 2em;
   }
 
-  .distance-list {
-    margin-top: 1em;
-    margin-bottom: -2em;
+  .scale-container {
+    position: sticky;
+    right: 0;
+    bottom: 0;
+    justify-self: start;
+    margin-left: auto;
+    padding: 1em;
   }
 }
 </style>

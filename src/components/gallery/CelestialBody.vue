@@ -7,8 +7,9 @@
     <div class="labels">
       <p v-if="showName" class="name">{{ body.name }}</p>
       <p v-if="showDiameter" class="size">{{ friendlyDiameter }}</p>
-      <div class="groups" :class="{ visible: showGroups }">
-        <span>Links</span>
+      <div class="details" :class="{ visible: showGroups }">
+        <!-- <p v-if="body.description" class="description">{{ body.description }}</p> -->
+        <p class="group-header">Links</p>
         <ul class="group-list">
           <li v-for="group in groups" :key="group.key">
             <router-link :to="`?g=${group.key}`" replace>{{ group.name }}</router-link>
@@ -173,7 +174,10 @@ p {
   opacity: 0.5;
 }
 
-.groups {
+.details {
+  /* position: absolute;
+  left: 0;
+  right: 0; */
   height: 10em;
   opacity: 0;
   margin-left: -1em;
@@ -181,14 +185,20 @@ p {
   transition: opacity 0.5s;
 }
 
-.groups.visible {
+.details.visible,
+.celestial-body:hover .details {
   opacity: 1;
 }
 
-.celestial-body:hover .groups {
-  opacity: 1;
+.description {
+  margin-top: 2em;
+  font-size: 0.8em;
+  font-style: italic;
+  color: #444;
+  white-space: break-spaces;
 }
-.groups span {
+
+.group-header {
   display: block;
   color: #222;
   padding: 0.5em;

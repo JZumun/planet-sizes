@@ -3,6 +3,7 @@ import data from "./data.yaml";
 export interface Body {
   key: string;
   name: string;
+  description?: string;
   radius: [number] | [number, number];
   tilt?: number;
   color?: string;
