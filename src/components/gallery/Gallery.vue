@@ -298,6 +298,8 @@ function handleWheel(e: WheelEvent) {
 @media all and (max-width: 60em) {
   .celestial-bodies {
     height: initial;
+    padding-left: 20vw;
+    padding-right: 20vw;
   }
   .scale-container {
     position: sticky;

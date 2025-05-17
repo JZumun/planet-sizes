@@ -1,6 +1,6 @@
 <template>
   <section id="sidebar">
-    <h1 class="title">The Size of Planets</h1>
+    <router-link to="/" class="title"><h1>The Size of Planets</h1></router-link>
     <p>A tool for comparing the sizes of celestial bodies in the solar system.</p>
     <app-footer id="footer" />
   </section>
@@ -133,6 +133,10 @@ button {
 }
 
 .title {
+  text-decoration: none;
+  color: inherit;
+}
+.title h1 {
   margin: 0;
 }
 

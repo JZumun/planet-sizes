@@ -4,22 +4,15 @@
     <select name="presets" id="presets" v-model="preset" required>
       <option :value="''" selected disabled hidden>Choose a preset...</option>
       <optgroup v-for="collection in presets" :key="collection.name" :label="collection.name">
-        <option
-          v-for="scene in collection.includes"
-          :key="scene.key"
-          :value="scene.key"
-        >{{scene.name}}</option>
+        <option v-for="scene in collection.includes" :key="scene.key" :value="scene.key">{{ scene.name }}</option>
       </optgroup>
     </select>
 
     <label for="bodies">Add:</label>
-    <data-search
-      id="bodies"
-      class="field"
-      placeholder="Look up..."
-      v-model="searchInput"
-      :data="bodyData"
-    />
+    <div class="field buttons">
+      <data-search id="bodies" placeholder="Look up..." v-model="searchInput" :data="bodyData" />
+      <button @click.prevent="addRandom()">+ Random</button>
+    </div>
 
     <div class="field">
       <div class="body-tag" v-for="body in selected" :key="body.key">
@@ -27,14 +20,15 @@
         <button class="remove" @click.prevent="remove(body.key)">✕</button>
       </div>
     </div>
-    <button class="field" @click.prevent="clear()">Clear</button>
+
+    <button class="field" @click.prevent="clear()">Reset</button>
   </sidebar-panel>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType, Ref, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { Body, bodies, presets } from "../../data/data";
+import { Body, bodies, presets, getRandomBody } from "../../data/data";
 import DataSearch from "../form/DataSearch.vue";
 import SidebarPanel from "../sidebar/SidebarPanel.vue";
 
@@ -57,13 +51,14 @@ export default defineComponent({
 
     const preset = computed({
       get: () => props.scene ?? "",
-      set: (val) => router.replace(`/?g=${val}`),
+      set: (val) => router.push(`/?g=${val}`),
     });
 
     const selected = computed({
       get: () => props.bodies,
       set: (val) => router.replace(`/?i=${val.map((b) => b.key).join(" ")}`),
     });
+    const selectedKeys = computed(() => selected.value.map((b) => b.key));
 
     const remove = (key: string) => {
       return (selected.value = selected.value.filter((b) => b.key !== key));
@@ -75,13 +70,16 @@ export default defineComponent({
       }
     };
     const clear = () => {
-      selected.value = [];
+      router.push("/");
     };
 
+    function addRandom() {
+      const newBody = getRandomBody(selectedKeys.value);
+      add(newBody.key);
+    }
+
     const searchInput: Ref<Body | null> = ref(null);
-    const bodyData = Object.fromEntries(
-      Object.values(bodies).map((b) => [b.name, b])
-    );
+    const bodyData = Object.fromEntries(Object.values(bodies).map((b) => [b.name, b]));
     watch(searchInput, (val) => {
       if (val && add(val.key)) {
         searchInput.value = null;
@@ -95,6 +93,7 @@ export default defineComponent({
       remove,
       add,
       clear,
+      addRandom,
       searchInput,
     };
   },
@@ -131,8 +130,8 @@ export default defineComponent({
 }
 
 .field.buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.25em;
-  flex-wrap: wrap;
 }
 </style>

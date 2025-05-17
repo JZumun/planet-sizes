@@ -297,7 +297,7 @@ scenes:
           distance: 49_880
           inclination: 126.356
   alpha_centauri:
-    name: Alpha Centauri
+    name: Alpha Centauri & Sol
     includes:
       - alpha_centauri_a
       - alpha_centauri_b
@@ -330,7 +330,7 @@ scenes:
           # 2.4k AU
           distance: 359_040_000_000
   stars:
-    name: A Handful of Stars
+    name: Some Notable Stars
     includes:
       - sun
       - alpha_centauri_a # 5ly

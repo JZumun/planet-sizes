@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, LocationQueryValue } from "vue-router";
-import { bodies, Body, getBodiesOfGroup, Scene, scenes } from "./data/data";
+import { bodies, Body, getBodiesOfGroup, Scene, scenes, getRandomBody } from "./data/data";
 
 export const queryValueOrFirst = (
   item: LocationQueryValue | LocationQueryValue[],
@@ -29,7 +29,7 @@ export const router = createRouter({
               .filter((b) => b && !displayedBodies.some((d) => d.key == b.key)),
           );
         } else if (!scene && bodyValues == null) {
-          displayedBodies = [bodies.earth, randomBody()]
+          displayedBodies = [bodies.earth, getRandomBody([bodies.earth.key])]
         }
 
         return {
@@ -41,14 +41,13 @@ export const router = createRouter({
   ],
 });
 
-function randomBody() {
-  const list = Object.values(bodies);
-  const index = Math.floor(Math.random() * list.length);
-  const body = list[index];
-
-  if (body.key != "earth") {
-    return body;
+router.beforeEach((to) => {
+  if (to.path == "/") {
+    if (!to.query.g && !to.query.i) {
+      const random = getRandomBody([bodies.earth.key])
+      return `/?i=earth ${random.key}`
+    }
   } else {
-    return randomBody();
+    return true;
   }
-}
+});

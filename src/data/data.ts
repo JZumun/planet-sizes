@@ -57,3 +57,15 @@ function fillKeys<T>(
     Object.entries(obj).map(([key, item]) => [key, { key, ...item }]),
   );
 }
+
+export const getRandomBody = function randomBody(excludes: string[] = []) {
+  const list = Object.values(bodies);
+  const index = Math.floor(Math.random() * list.length);
+  const body = list[index];
+
+  if (!excludes.includes(body.key)) {
+    return body;
+  } else {
+    return randomBody(excludes);
+  }
+}
