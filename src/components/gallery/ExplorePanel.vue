@@ -12,89 +12,70 @@
     <data-search class="field" id="bodies" placeholder="Look up..." v-model="searchInput" :data="bodyData" />
     <button class="field" @click.prevent="addRandom()">+ Random</button>
 
-    <div class="field">
+    <draggable v-model="selected" class="field">
       <div class="body-tag" v-for="body in selected" :key="body.key">
         {{ body.name }}
         <button class="remove" @click.prevent="remove(body.key)">✕</button>
       </div>
-    </div>
+    </draggable>
 
     <button class="field" @click.prevent="clear()">Reset</button>
   </sidebar-panel>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType, Ref, ref, watch } from "vue";
+<script lang="ts" setup>
+import { computed, Ref, ref, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
+import { VueDraggableNext as Draggable } from "vue-draggable-next";
 import { Body, bodies, presets, getRandomBody } from "../../data/data";
 import DataSearch from "../form/DataSearch.vue";
 import SidebarPanel from "../sidebar/SidebarPanel.vue";
 
-export default defineComponent({
-  components: {
-    DataSearch,
-    SidebarPanel,
-  },
-  props: {
-    scene: {
-      type: String,
-    },
-    bodies: {
-      type: Array as PropType<Body[]>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const router = useRouter();
+const props = defineProps<{
+  scene?: string;
+  bodies: Body[];
+}>();
 
-    const preset = computed({
-      get: () => props.scene ?? "",
-      set: (val) => router.push(`/?g=${val}`),
-    });
+const router = useRouter();
 
-    const selected = computed({
-      get: () => props.bodies,
-      set: (val) => router.replace(`/?i=${val.map((b) => b.key).join(" ")}`),
-    });
-    const selectedKeys = computed(() => selected.value.map((b) => b.key));
+const preset = computed({
+  get: () => props.scene ?? "",
+  set: (val) => router.push(`/?g=${val}`),
+});
 
-    const remove = (key: string) => {
-      return (selected.value = selected.value.filter((b) => b.key !== key));
-    };
-    const add = (key: string) => {
-      if (key in bodies) {
-        selected.value = [bodies[key], ...remove(key)];
-        return key;
-      }
-    };
-    const clear = () => {
-      router.push("/");
-    };
+const selected = ref<Body[]>([]);
+watchEffect(() => {
+  selected.value = props.bodies;
+});
+watch(selected, (val) => {
+  router.replace(`/?i=${val.map((b) => b.key).join(" ")}`);
+});
+const selectedKeys = computed(() => selected.value.map((b) => b.key));
 
-    function addRandom() {
-      const newBody = getRandomBody(selectedKeys.value);
-      add(newBody.key);
-    }
+const remove = (key: string) => {
+  return (selected.value = selected.value.filter((b) => b.key !== key));
+};
+const add = (key: string) => {
+  if (key in bodies) {
+    selected.value = [bodies[key], ...remove(key)];
+    return key;
+  }
+};
+const clear = () => {
+  router.push("/");
+};
 
-    const searchInput: Ref<Body | null> = ref(null);
-    const bodyData = Object.fromEntries(Object.values(bodies).map((b) => [b.name, b]));
-    watch(searchInput, (val) => {
-      if (val && add(val.key)) {
-        searchInput.value = null;
-      }
-    });
-    return {
-      bodyData,
-      presets,
-      preset,
-      selected,
-      remove,
-      add,
-      clear,
-      addRandom,
-      searchInput,
-    };
-  },
+function addRandom() {
+  const newBody = getRandomBody(selectedKeys.value);
+  add(newBody.key);
+}
+
+const searchInput: Ref<Body | null> = ref(null);
+const bodyData = Object.fromEntries(Object.values(bodies).map((b) => [b.name, b]));
+watch(searchInput, (val) => {
+  if (val && add(val.key)) {
+    searchInput.value = null;
+  }
 });
 </script>
 
@@ -121,6 +102,7 @@ export default defineComponent({
   margin-bottom: 0.5em;
   padding: 0.5em;
   background: #222;
+  cursor: move;
 }
 .body-tag > .remove {
   background: none;
