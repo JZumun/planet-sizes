@@ -45,7 +45,7 @@
     </div>
   </section>
   <teleport to="#sidebar">
-    <explore-panel :scene="scene?.key" :bodies="bodies" />
+    <explore-panel :scene="scene" :bodies="bodies" />
     <sidebar-panel name="View Controls">
       <label for="zoom">Zoom</label>
       <log-slider class="field" id="zoom" v-model="zoom" :min="1 / 10" :max="10" />

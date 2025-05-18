@@ -27,30 +27,33 @@
 import { computed, Ref, ref, watch, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { VueDraggableNext as Draggable } from "vue-draggable-next";
-import { Body, bodies, presets, getRandomBody } from "../../data/data";
+import { Body, bodies, presets, getRandomBody, Scene } from "../../data/data";
 import DataSearch from "../form/DataSearch.vue";
 import SidebarPanel from "../sidebar/SidebarPanel.vue";
 
 const props = defineProps<{
-  scene?: string;
+  scene?: Scene;
   bodies: Body[];
 }>();
 
 const router = useRouter();
 
 const preset = computed({
-  get: () => props.scene ?? "",
+  get: () => props.scene?.key ?? "",
   set: (val) => router.push(`/?g=${val}`),
 });
 
-const selected = ref<Body[]>([]);
+const selected = ref<Body[]>(props.bodies);
 watchEffect(() => {
   selected.value = props.bodies;
 });
-watch(selected, (val) => {
-  router.replace(`/?i=${val.map((b) => b.key).join(" ")}`);
-});
 const selectedKeys = computed(() => selected.value.map((b) => b.key));
+watch(selectedKeys, (val) => {
+  if (props.scene && props.scene.includes.every((k, i) => val[i] == k)) {
+    return;
+  }
+  router.replace(`/?i=${val.join(" ")}`);
+});
 
 const remove = (key: string) => {
   return (selected.value = selected.value.filter((b) => b.key !== key));
