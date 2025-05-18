@@ -29,7 +29,7 @@ groups:
       - stars
 scenes:
   solar-system:
-    name: Solar System
+    name: The Solar System
     includes:
       - sun
       - mercury

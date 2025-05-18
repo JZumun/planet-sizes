@@ -19,7 +19,7 @@
         </li>
       </template>
     </ul>
-    <section class="celestial-bodies" ref="bodies" v-if="display.length > 0">
+    <section class="celestial-bodies" ref="bodies">
       <transition-group name="fade">
         <div
           class="celestial-body-container"
@@ -39,7 +39,6 @@
         </div>
       </transition-group>
     </section>
-    <section class="empty-message" v-else>Choose which celestial bodies to display from the options.</section>
     <div class="scale-container">
       <div class="scale">{{ fmtDistance(Math.round(50 * scale)) }} km</div>
       <p class="scale-disclaimer" v-if="!showDistance">Distances between objects not drawn to scale</p>
@@ -71,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from "vue";
+import { computed, onMounted, ref, useTemplateRef, watch, watchEffect } from "vue";
 import { useElementSize, useWindowSize } from "@vueuse/core";
 import { Body, Scene, bodies as bodyMap } from "../../data/data";
 import CelestialBody from "./CelestialBody.vue";
@@ -136,13 +135,20 @@ const fmtDistance = Intl.NumberFormat().format;
 
 // BODIES ON DISPLAY
 const initialMargin = computed(() => props.bodies[0].radius[0]);
-const display = computed(() => {
+const display = ref<
+  {
+    body: Body;
+    distance: number;
+  }[]
+>([]);
+const updateDisplay = () => {
   // simple list of bodies
   if (!showDistance.value) {
-    return props.bodies.map((b, i) => ({
+    display.value = props.bodies.map((b, i) => ({
       body: b,
       distance: b.radius[0] + (props.bodies[i - 1]?.radius?.[0] ?? 0),
     }));
+    return;
   }
 
   // system with accurate dustances
@@ -150,7 +156,7 @@ const display = computed(() => {
   const main = bodyMap[system.main];
 
   let previousDistance = 0;
-  return [
+  display.value = [
     {
       body: { ...main, tilt: 0 },
       distance: initialMargin.value,
@@ -164,7 +170,9 @@ const display = computed(() => {
       };
     }),
   ];
-});
+};
+watch(props, updateDisplay);
+onMounted(updateDisplay);
 
 // WHEEL BEHAVIOR
 function handleWheel(e: WheelEvent) {
