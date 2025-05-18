@@ -1,4 +1,5 @@
 import data from "./data.yaml";
+import { generateRandomGray } from "../utilities/color";
 
 export interface Body {
   key: string;
@@ -6,7 +7,7 @@ export interface Body {
   description?: string;
   radius: [number] | [number, number];
   tilt?: number;
-  color?: string;
+  color: string;
   rings?: {
     radius: number;
     color: string;
@@ -34,7 +35,10 @@ export interface Group {
 
 export const scenes: Record<string, Scene> = fillKeys(data.scenes);
 
-export const bodies: Record<string, Body> = fillKeys(data.bodies);
+export const bodies: Record<string, Body> = fillKeys<Body>(data.bodies, (k, b) => ({
+  ...b,
+  color: b.color ?? generateRandomGray(k),
+}));
 
 export const presets: Group[] = Object.values(data.groups).map((x: any) => {
   return {
@@ -51,11 +55,12 @@ export const getGroupsOfBody = (body: string): Scene[] =>
     .filter((g) => g.includes.includes(body))
     .reverse();
 
-function fillKeys<T>(
+function fillKeys<T, K = T>(
   obj: Record<string, T>,
-): Record<string, T & { key: string }> {
+  mapper: (k: string, o: T) => K = (k, o) => o as unknown as K
+): Record<string, K & { key: string }> {
   return Object.fromEntries(
-    Object.entries(obj).map(([key, item]) => [key, { key, ...item }]),
+    Object.entries(obj).map(([key, item]) => [key, { key, ...mapper(key, item) }]),
   );
 }
 

@@ -289,7 +289,7 @@ function handleWheel(e: WheelEvent) {
 .distance-list {
   display: flex;
   flex-direction: column-reverse;
-  gap: 0.75em;
+  gap: 0.5em;
   padding: 0;
   padding-left: var(--gallery-padding);
   margin-left: calc(var(--margin) / var(--scale) * 1px);
@@ -298,7 +298,7 @@ function handleWheel(e: WheelEvent) {
   li {
     list-style-type: none;
     opacity: 0.5;
-    font-size: 0.8em;
+    font-size: 0.75em;
     position: relative;
     width: fit-content;
 
@@ -312,7 +312,7 @@ function handleWheel(e: WheelEvent) {
       content: "";
       display: block;
       width: calc(var(--distance) / var(--scale) * 1px);
-      height: 5px;
+      height: 3px;
       border: 1px solid;
       border-bottom: 0px;
       border-color: var(--color);
