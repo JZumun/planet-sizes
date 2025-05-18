@@ -1,5 +1,5 @@
 <template>
-  <input type="range" v-model="internalValue" min="0" max="100" step="1" />
+  <input type="range" v-model="internalValue" min="0" max="100" step="10" />
 </template>
 
 <script lang="ts" setup>

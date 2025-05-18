@@ -4,7 +4,7 @@ export function generateRandomGray(seed: string) {
     const r = rand(seed);
     const bias = 100 + r.intBetween(-30, 30);
     function generateGrayComponent() {
-        return (r.intBetween(-4, 4) + bias).toString(16);
+        return (r.intBetween(-10, 10) + bias).toString(16);
     }
 
     const red = generateGrayComponent();
