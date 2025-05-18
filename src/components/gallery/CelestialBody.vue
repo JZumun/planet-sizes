@@ -79,6 +79,7 @@ const groups = computed(() => getGroupsOfBody(props.body.key));
   width: v-bind(width);
   border-radius: 100%;
   overflow: hidden;
+  isolation: isolate;
 }
 .body::before {
   --equator-thickness: 1px;
@@ -98,18 +99,21 @@ const groups = computed(() => getGroupsOfBody(props.body.key));
   content: "";
   display: block;
   height: 100%;
-  width: 85%;
+  width: 100%;
   background: #ffffff21;
   position: absolute;
   top: 0;
-  right: 19%;
-  mix-blend-mode: overlay;
+  right: 0;
+  mix-blend-mode: soft-light;
   border-radius: 100%;
+  background: radial-gradient(circle at 25% 50%, #0000, #000 150%), url(/noise.svg);
+  background-size: auto, 150px;
+  filter: contrast(220%) brightness(500%);
 }
 .rings {
   grid-area: figure;
-  height: 1px;
-  border-radius: 1px;
+  height: 5%;
+  border-radius: 50%;
   width: v-bind(ringWidth);
   background: v-bind(ringColor);
   opacity: 0.5;
