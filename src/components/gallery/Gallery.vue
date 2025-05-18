@@ -121,7 +121,7 @@ const sceneSize = computed(() => {
 
   const largestBodyRadius = props.bodies.reduce((max, body) => Math.max(max, body.radius[0]), 0);
 
-  return Math.max(1, largestBodyRadius * 2 * Math.min(props.bodies.length + 2, 5));
+  return Math.max(1, largestBodyRadius * 5);
 });
 
 const scale = computed(() => {
