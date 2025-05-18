@@ -20,75 +20,37 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { Body, getGroupsOfBody } from "../../data/data";
-import { defineComponent, PropType, computed } from "vue";
-import { create as rand } from "random-seed";
+import { computed } from "vue";
 
-function generateRandomGray(seed: string) {
-  const r = rand(seed);
-  const bias = 100 + r.intBetween(-30, 30);
-  function generateGrayComponent() {
-    return (r.intBetween(-4, 4) + bias).toString(16);
+const props = withDefaults(
+  defineProps<{
+    body: Body;
+    scale: number;
+    showName?: boolean;
+    showDiameter?: boolean;
+    showGroups?: boolean;
+  }>(),
+  {
+    showName: true,
+    showDiameter: true,
+    showGroups: true,
   }
+);
 
-  const red = generateGrayComponent();
-  const green = generateGrayComponent();
-  const blue = generateGrayComponent();
-  return `#${red}${green}${blue}`;
-}
+const width = computed(() => `${(props.body.radius[0] * 2) / props.scale}px`);
+const height = computed(() => (props.body.radius[1] ? `${(props.body.radius[1] * 2) / props.scale}px` : width.value));
 
-export default defineComponent({
-  props: {
-    body: {
-      type: Object as PropType<Body>,
-      required: true,
-    },
-    scale: {
-      required: true,
-      type: Number,
-    },
-    showName: {
-      type: Boolean,
-      default: true,
-    },
-    showDiameter: {
-      type: Boolean,
-      default: true,
-    },
-    showGroups: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  setup(props) {
-    const width = computed(() => `${(props.body.radius[0] * 2) / props.scale}px`);
-    const height = computed(() =>
-      props.body.radius[1] ? `${(props.body.radius[1] * 2) / props.scale}px` : width.value
-    );
+const tilt = computed(() => `${props.body.tilt ?? 0}deg`);
+const color = computed(() => props.body.color);
 
-    const tilt = computed(() => `${props.body.tilt ?? 0}deg`);
-    const color = computed(() => props.body.color ?? generateRandomGray(props.body.key));
+const friendlyDiameter = computed(() => `${Intl.NumberFormat().format(Math.floor(props.body.radius[0] * 2))} km`);
 
-    const friendlyDiameter = computed(() => `${Intl.NumberFormat().format(Math.floor(props.body.radius[0] * 2))} km`);
+const ringWidth = computed(() => `${((props.body.rings?.radius ?? 0) * 2) / props.scale}px`);
+const ringColor = computed(() => props.body.rings?.color ?? "transparent");
 
-    const ringWidth = computed(() => `${((props.body.rings?.radius ?? 0) * 2) / props.scale}px`);
-    const ringColor = computed(() => props.body.rings?.color ?? "transparent");
-
-    const groups = computed(() => getGroupsOfBody(props.body.key));
-
-    return {
-      width,
-      height,
-      tilt,
-      color,
-      friendlyDiameter,
-      ringWidth,
-      ringColor,
-      groups,
-    };
-  },
-});
+const groups = computed(() => getGroupsOfBody(props.body.key));
 </script>
 
 <style scoped>
