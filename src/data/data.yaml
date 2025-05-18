@@ -434,7 +434,7 @@ bodies:
 
   pluto:
     name: Pluto
-    color: "#3c3636"
+    color: "#5f4133"
     radius:
       - 1188.3
       - 1188.3
